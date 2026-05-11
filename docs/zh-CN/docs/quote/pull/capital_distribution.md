@@ -1,27 +1,27 @@
-﻿---
-id: quote_capital_flow_intraday
-title: 获取标的当日资金流向
-slug: capital-flow-intraday
-sidebar_position: 17
+---
+id: quote_capital_distribution.md
+title: 获取标的当日资金分布
+slug: capital-distribution
+sidebar_position: 18
 ---
 
-该接口用于获取标的当日的资金流向。
+该接口用于获取标的当日的资金分布。
 
 <QuotePermission command="capital" />
 
 <CliCommand>
-# Tesla 今日资金流向时序
-longbridge capital flow TSLA.US
-# Apple 今日资金流向时序
-longbridge capital flow AAPL.US
-# NVDA 今日资金流向时序
-longbridge capital flow NVDA.US
+# Tesla 资金分布快照（大/中/小单）
+longbridge capital TSLA.US
+# Apple 资金分布快照
+longbridge capital AAPL.US
+# NVDA 资金分布快照
+longbridge capital NVDA.US
 </CliCommand>
 
-<SDKLinks module="quote" klass="QuoteContext" method="capital_flow" />
+<SDKLinks module="quote" klass="QuoteContext" method="capital_distribution" />
 
 :::info
-[业务指令](../../socket/biz-command)：`24`
+[业务指令](../../socket/biz_command)：`25`
 :::
 
 ## Request
@@ -35,7 +35,7 @@ longbridge capital flow NVDA.US
 ### Protobuf
 
 ```protobuf
-message CapitalFlowIntradayRequest {
+message SecurityRequest {
   string symbol = 1;
 }
 ```
@@ -52,7 +52,7 @@ oauth = OAuthBuilder("your-client-id").build(lambda url: print("Visit:", url))
 config = Config.from_oauth(oauth)
 ctx = QuoteContext(config)
 
-resp = ctx.capital_flow("700.HK")
+resp = ctx.capital_distribution("700.HK")
 print(resp)
 ```
 
@@ -68,7 +68,7 @@ async def main() -> None:
     config = Config.from_oauth(oauth)
     ctx = AsyncQuoteContext.create(config)
 
-    resp = await ctx.capital_flow("700.HK")
+    resp = await ctx.capital_distribution("700.HK")
     print(resp)
 
 if __name__ == "__main__":
@@ -85,7 +85,7 @@ async function main() {
   const oauth = await OAuth.build("your-client-id", (_, url) => { console.log("Open this URL to authorize: " + url) })
   const config = Config.fromOAuth(oauth)
   const ctx = QuoteContext.new(config)
-  const resp = await ctx.capitalFlow("700.HK")
+  const resp = await ctx.capitalDistribution("700.HK")
   console.log(resp)
 }
 main().catch(console.error)
@@ -103,8 +103,8 @@ class Main {
         try (OAuth oauth = new OAuthBuilder("your-client-id").build(url -> System.out.println("Open to authorize: " + url)).get();
              Config config = Config.fromOAuth(oauth);
              QuoteContext ctx = QuoteContext.create(config)) {
-            CapitalFlowLine[] resp = ctx.getCapitalFlow("700.HK").get();
-            for (CapitalFlowLine line : resp) System.out.println(line);
+            CapitalDistributionResponse resp = ctx.getCapitalDistribution("700.HK").get();
+            System.out.println(resp);
         }
     }
 }
@@ -122,7 +122,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let oauth = OAuthBuilder::new("your-client-id").build(|url| println!("Open this URL to authorize: {url}")).await?;
     let config = Arc::new(Config::from_oauth(oauth));
     let (ctx, _) = QuoteContext::new(config);
-    let resp = ctx.capital_flow("700.HK").await?;
+    let resp = ctx.capital_distribution("700.HK").await?;
     println!("{:?}", resp);
     Ok(())
 }
@@ -148,9 +148,9 @@ run(const OAuth& oauth)
     Config config = Config::from_oauth(oauth);
     QuoteContext ctx = QuoteContext::create(config);
 
-    ctx.capital_flow("700.HK", [](auto res) {
+    ctx.capital_distribution("700.HK", [](auto res) {
         if (!res) { std::cout << "failed: " << *res.status().message() << std::endl; return; }
-        std::cout << "capital_flow lines: " << res->size() << std::endl;
+        std::cout << "capital_distribution: " << res->symbol << std::endl;
     });
 }
 
@@ -208,11 +208,11 @@ func main() {
 		log.Fatal(err)
 	}
 	defer qctx.Close()
-	lines, err := qctx.CapitalFlow(context.Background(), "700.HK")
+	dist, err := qctx.CapitalDistribution(context.Background(), "700.HK")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("capital_flow lines:", len(lines))
+	fmt.Printf("%+v\n", dist)
 }
 ```
 
@@ -224,23 +224,32 @@ func main() {
 
 ### Response Properties
 
-| Name               | Type     | Description    |
-| ------------------ | -------- | -------------- |
-| symbol             | string   | 标的代码       |
-| capital_flow_lines | object[] | 资金流向数据   |
-| ∟ inflow           | string   | 净流入         |
-| ∟ timestamp        | int64    | 分钟开始时间戳 |
+| Name        | Type     | Description    |
+| ----------- | -------- | -------------- |
+| symbol      | string   | 标的代码       |
+| timestamp   | int64    | 数据更新时间戳 |
+| capital_in  | object[] | 流入资金       |
+| ∟ large     | string   | 大单           |
+| ∟ medium    | string   | 中单           |
+| ∟ small     | string   | 小单           |
+| capital_out | object[] | 流出资金       |
+| ∟ large     | string   | 大单           |
+| ∟ medium    | string   | 中单           |
+| ∟ small     | string   | 小单           |
 
 ### Protobuf
 
 ```protobuf
-message CapitalFlowIntradayResponse {
-  message CapitalFlowLine {
-    string inflow = 1;
-    int64 timestamp = 2;
+message CapitalDistributionResponse {
+  message CapitalDistribution {
+    string large = 1;
+    string medium = 2;
+    string small = 3;
   }
   string symbol = 1;
-  repeated CapitalFlowLine capital_flow_lines = 2;
+  int64 timestamp = 2;
+  CapitalDistribution capital_in = 3;
+  CapitalDistribution capital_out = 4;
 }
 ```
 
@@ -249,13 +258,17 @@ message CapitalFlowIntradayResponse {
 ```json
 {
   "symbol": "700.HK",
-  "capital_flow_lines": [
-    { "inflow": "-310255860.000", "timestamp": "1655106960" },
-    { "inflow": "-314011220.000", "timestamp": "1655107020" },
-    { "inflow": "-314011220.000", "timestamp": "1655107080" },
-    { "inflow": "-314011220.000", "timestamp": "1655107140" },
-    { "inflow": "-314011220.000", "timestamp": "1655107200" }
-  ]
+  "timestamp": "1655107800",
+  "capital_in": {
+    "large": "935389700.000",
+    "medium": "2056032380.000",
+    "small": "828715920.000"
+  },
+  "capital_out": {
+    "large": "1175331560.000",
+    "medium": "2271829740.000",
+    "small": "751648940.000"
+  }
 }
 ```
 

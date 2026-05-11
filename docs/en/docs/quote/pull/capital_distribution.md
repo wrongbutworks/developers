@@ -1,36 +1,36 @@
 ---
 id: quote_capital_distribution.md
-title: 獲取標的當日資金分佈
+title: Security Capital Distribution
 slug: capital-distribution
 sidebar_position: 18
 ---
 
-該接口用於獲取標的當日的資金分佈。
+This API is used to obtain the daily capital distribution of security.
 
 <QuotePermission command="capital" />
 
 <CliCommand>
-# Tesla 資金分佈快照（大/中/小單）
-longbridge capital dist TSLA.US
-# Apple 資金分佈快照
-longbridge capital dist AAPL.US
-# NVDA 資金分佈快照
-longbridge capital dist NVDA.US
+# capital distribution snapshot for Tesla (large/medium/small)
+longbridge capital TSLA.US
+# capital distribution snapshot for Apple
+longbridge capital AAPL.US
+# capital distribution snapshot for NVDA
+longbridge capital NVDA.US
 </CliCommand>
 
 <SDKLinks module="quote" klass="QuoteContext" method="capital_distribution" />
 
 :::info
-[業務指令](../../socket/biz-command)：`25`
+[Business Command](../../socket/biz_command)：`25`
 :::
 
 ## Request
 
 ### Parameters
 
-| Name   | Type   | Required | Description                                          |
-| ------ | ------ | -------- | ---------------------------------------------------- |
-| symbol | string | 是       | 標的代碼，使用 `ticker.region` 格式，例如： `700.HK` |
+| Name   | Type   | Required | Description                                                     |
+| ------ | ------ | -------- | --------------------------------------------------------------- |
+| symbol | string | Yes      | Security code, in `ticker.region` format, for example: `700.HK` |
 
 ### Protobuf
 
@@ -82,10 +82,12 @@ if __name__ == "__main__":
 const { Config, QuoteContext, OAuth } = require('longbridge')
 
 async function main() {
-  const oauth = await OAuth.build("your-client-id", (_, url) => { console.log("Open this URL to authorize: " + url) })
+  const oauth = await OAuth.build('your-client-id', (_, url) => {
+    console.log('Open this URL to authorize: ' + url)
+  })
   const config = Config.fromOAuth(oauth)
   const ctx = QuoteContext.new(config)
-  const resp = await ctx.capitalDistribution("700.HK")
+  const resp = await ctx.capitalDistribution('700.HK')
   console.log(resp)
 }
 main().catch(console.error)
@@ -100,7 +102,9 @@ import com.longbridge.quote.*;
 
 class Main {
     public static void main(String[] args) throws Exception {
-        try (OAuth oauth = new OAuthBuilder("your-client-id").build(url -> System.out.println("Open to authorize: " + url)).get();
+        try (OAuth oauth = new OAuthBuilder("your-client-id")
+                .build(url -> System.out.println("Open to authorize: " + url))
+                .get();
              Config config = Config.fromOAuth(oauth);
              QuoteContext ctx = QuoteContext.create(config)) {
             CapitalDistributionResponse resp = ctx.getCapitalDistribution("700.HK").get();
@@ -119,7 +123,9 @@ use longbridge::{oauth::OAuthBuilder, quote::QuoteContext, Config};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let oauth = OAuthBuilder::new("your-client-id").build(|url| println!("Open this URL to authorize: {url}")).await?;
+    let oauth = OAuthBuilder::new("your-client-id")
+        .build(|url| println!("Open this URL to authorize: {url}"))
+        .await?;
     let config = Arc::new(Config::from_oauth(oauth));
     let (ctx, _) = QuoteContext::new(config);
     let resp = ctx.capital_distribution("700.HK").await?;
@@ -149,7 +155,10 @@ run(const OAuth& oauth)
     QuoteContext ctx = QuoteContext::create(config);
 
     ctx.capital_distribution("700.HK", [](auto res) {
-        if (!res) { std::cout << "failed: " << *res.status().message() << std::endl; return; }
+        if (!res) {
+            std::cout << "failed: " << *res.status().message() << std::endl;
+            return;
+        }
         std::cout << "capital_distribution: " << res->symbol << std::endl;
     });
 }
@@ -219,23 +228,22 @@ func main() {
   </TabItem>
 </Tabs>
 
-
 ## Response
 
 ### Response Properties
 
-| Name        | Type     | Description    |
-| ----------- | -------- | -------------- |
-| symbol      | string   | 標的代碼       |
-| timestamp   | int64    | 數據更新時間戳 |
-| capital_in  | object[] | 流入資金       |
-| ∟ large     | string   | 大單           |
-| ∟ medium    | string   | 中單           |
-| ∟ small     | string   | 小單           |
-| capital_out | object[] | 流出資金       |
-| ∟ large     | string   | 大單           |
-| ∟ medium    | string   | 中單           |
-| ∟ small     | string   | 小單           |
+| Name        | Type     | Description          |
+| ----------- | -------- | -------------------- |
+| symbol      | string   | Security code        |
+| timestamp   | int64    | Data update time     |
+| capital_in  | object[] | Inflow capital data  |
+| ∟ large     | string   | large order          |
+| ∟ medium    | string   | medium order         |
+| ∟ small     | string   | small order          |
+| capital_out | object[] | Outflow capital data |
+| ∟ large     | string   | large order          |
+| ∟ medium    | string   | medium order         |
+| ∟ small     | string   | small order          |
 
 ### Protobuf
 
@@ -272,13 +280,13 @@ message CapitalDistributionResponse {
 }
 ```
 
-## 錯誤碼
+## Error Code
 
-| 協議錯誤碼 | 業務錯誤碼 | 描述           | 排查建議                     |
-| ---------- | ---------- | -------------- | ---------------------------- |
-| 3          | 301600     | 無效的請求     | 請求參數有誤或解包失敗       |
-| 3          | 301606     | 限流           | 降低請求頻次                 |
-| 7          | 301602     | 服務端內部錯誤 | 請重試或聯繫技術人員處理     |
-| 7          | 301600     | 請求標的不存在 | 檢查請求的 `symbol` 是否正確 |
-| 7          | 301603     | 標的無行情     | 標的沒有請求的行情數據       |
-| 7          | 301604     | 無權限         | 沒有獲取標的行情的權限       |
+| Protocol Error Code | Business Error Code | Description        | Troubleshooting Suggestions                                   |
+| ------------------- | ------------------- | ------------------ | ------------------------------------------------------------- |
+| 3                   | 301600              | Invalid request    | Invalid request parameters or unpacking request failed        |
+| 3                   | 301606              | Request rate limit | Reduce the frequency of requests                              |
+| 7                   | 301602              | Server error       | Please try again or contact a technician to resolve the issue |
+| 7                   | 301600              | Symbol not found   | Check that the requested `symbol` is correct                  |
+| 7                   | 301603              | No quotes          | Security no quote                                             |
+| 7                   | 301604              | No access          | No access to security quote                                   |

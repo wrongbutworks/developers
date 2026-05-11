@@ -1,7 +1,7 @@
 ---
 title: Data Commands
-id: biz-command
-slug: /socket/biz-command
+id: biz_command
+slug: /socket/biz_command
 sidebar_position: 5
 ---
 
@@ -66,10 +66,10 @@ And stock quote and order have difference endpoints, [check here](./hosts).
         <td><a href="../quote/pull/trade-day">Get Market Trading Days</a></td>
     </tr>
     <tr>
-        <td><a href="../quote/pull/capital-flow-intraday">Get Security Capital Flow Intraday</a></td>
+        <td><a href="../quote/pull/capital_flow_intraday">Get Security Capital Flow Intraday</a></td>
     </tr>
     <tr>
-        <td><a href="../quote/pull/capital-distribution">Get Security Capital Distribution</a></td>
+        <td><a href="../quote/pull/capital_distribution">Get Security Capital Distribution</a></td>
     </tr>
     <tr>
         <td><a href="../quote/pull/calc-index">Get Calculate Indexes Of Securities</a></td>

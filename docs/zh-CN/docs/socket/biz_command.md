@@ -1,7 +1,7 @@
 ---
 title: 业务指令
-id: biz-command
-slug: /socket/biz-command
+id: biz_command
+slug: /socket/biz_command
 sidebar_position: 5
 ---
 
@@ -64,10 +64,10 @@ sidebar_position: 5
         <td><a href="../quote/pull/trade-day">获取市场交易日</a></td>
     </tr>
     <tr>
-        <td><a href="../quote/pull/capital-flow-intraday">获取标的当日资金流向</a></td>
+        <td><a href="../quote/pull/capital_flow_intraday">获取标的当日资金流向</a></td>
     </tr>
     <tr>
-        <td><a href="../quote/pull/capital-distribution">获取标的当日资金分布</a></td>
+        <td><a href="../quote/pull/capital_distribution">获取标的当日资金分布</a></td>
     </tr>
     <tr>
         <td><a href="../quote/pull/calc-index">获取标的计算指标</a></td>

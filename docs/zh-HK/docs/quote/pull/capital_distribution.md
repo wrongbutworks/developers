@@ -1,27 +1,27 @@
 ---
 id: quote_capital_distribution.md
-title: 获取标的当日资金分布
+title: 獲取標的當日資金分佈
 slug: capital-distribution
 sidebar_position: 18
 ---
 
-该接口用于获取标的当日的资金分布。
+該接口用於獲取標的當日的資金分佈。
 
 <QuotePermission command="capital" />
 
 <CliCommand>
-# Tesla 资金分布快照（大/中/小单）
-longbridge capital dist TSLA.US
-# Apple 资金分布快照
-longbridge capital dist AAPL.US
-# NVDA 资金分布快照
-longbridge capital dist NVDA.US
+# Tesla 資金分佈快照（大/中/小單）
+longbridge capital TSLA.US
+# Apple 資金分佈快照
+longbridge capital AAPL.US
+# NVDA 資金分佈快照
+longbridge capital NVDA.US
 </CliCommand>
 
 <SDKLinks module="quote" klass="QuoteContext" method="capital_distribution" />
 
 :::info
-[业务指令](../../socket/biz-command)：`25`
+[業務指令](../../socket/biz_command)：`25`
 :::
 
 ## Request
@@ -30,7 +30,7 @@ longbridge capital dist NVDA.US
 
 | Name   | Type   | Required | Description                                          |
 | ------ | ------ | -------- | ---------------------------------------------------- |
-| symbol | string | 是       | 标的代码，使用 `ticker.region` 格式，例如： `700.HK` |
+| symbol | string | 是       | 標的代碼，使用 `ticker.region` 格式，例如： `700.HK` |
 
 ### Protobuf
 
@@ -226,16 +226,16 @@ func main() {
 
 | Name        | Type     | Description    |
 | ----------- | -------- | -------------- |
-| symbol      | string   | 标的代码       |
-| timestamp   | int64    | 数据更新时间戳 |
-| capital_in  | object[] | 流入资金       |
-| ∟ large     | string   | 大单           |
-| ∟ medium    | string   | 中单           |
-| ∟ small     | string   | 小单           |
-| capital_out | object[] | 流出资金       |
-| ∟ large     | string   | 大单           |
-| ∟ medium    | string   | 中单           |
-| ∟ small     | string   | 小单           |
+| symbol      | string   | 標的代碼       |
+| timestamp   | int64    | 數據更新時間戳 |
+| capital_in  | object[] | 流入資金       |
+| ∟ large     | string   | 大單           |
+| ∟ medium    | string   | 中單           |
+| ∟ small     | string   | 小單           |
+| capital_out | object[] | 流出資金       |
+| ∟ large     | string   | 大單           |
+| ∟ medium    | string   | 中單           |
+| ∟ small     | string   | 小單           |
 
 ### Protobuf
 
@@ -272,13 +272,13 @@ message CapitalDistributionResponse {
 }
 ```
 
-## 错误码
+## 錯誤碼
 
-| 协议错误码 | 业务错误码 | 描述           | 排查建议                     |
+| 協議錯誤碼 | 業務錯誤碼 | 描述           | 排查建議                     |
 | ---------- | ---------- | -------------- | ---------------------------- |
-| 3          | 301600     | 无效的请求     | 请求参数有误或解包失败       |
-| 3          | 301606     | 限流           | 降低请求频次                 |
-| 7          | 301602     | 服务端内部错误 | 请重试或联系技术人员处理     |
-| 7          | 301600     | 请求标的不存在 | 检查请求的 `symbol` 是否正确 |
-| 7          | 301603     | 标的无行情     | 标的没有请求的行情数据       |
-| 7          | 301604     | 无权限         | 没有获取标的行情的权限       |
+| 3          | 301600     | 無效的請求     | 請求參數有誤或解包失敗       |
+| 3          | 301606     | 限流           | 降低請求頻次                 |
+| 7          | 301602     | 服務端內部錯誤 | 請重試或聯繫技術人員處理     |
+| 7          | 301600     | 請求標的不存在 | 檢查請求的 `symbol` 是否正確 |
+| 7          | 301603     | 標的無行情     | 標的沒有請求的行情數據       |
+| 7          | 301604     | 無權限         | 沒有獲取標的行情的權限       |

@@ -1,6 +1,6 @@
 ---
 slug: topics
-title: 獲取標的社區討論
+title: 获取标的社区讨论
 sidebar_position: 2
 language_tabs: false
 toc_footers: []
@@ -10,15 +10,15 @@ highlight_theme: ''
 headingLevel: 2
 ---
 
-獲取指定股票的討論列表。
+获取指定股票的讨论列表。
 
 <CliCommand>
-# Tesla 社群討論帖子
-longbridge topics TSLA.US
-# Apple 社群討論帖子
-longbridge topics AAPL.US
-# NVDA 社群討論帖子
-longbridge topics NVDA.US
+# Tesla 社区讨论帖子
+longbridge topic TSLA.US
+# Apple 社区讨论帖子
+longbridge topic AAPL.US
+# NVDA 社区讨论帖子
+longbridge topic NVDA.US
 </CliCommand>
 
 <SDKLinks module="content" klass="ContentContext" method="topics" />
@@ -36,7 +36,7 @@ longbridge topics NVDA.US
 
 | Name   | Type   | Required | Description                                    |
 | ------ | ------ | -------- | ---------------------------------------------- |
-| symbol | string | YES      | 股票代碼，使用 `ticker.region` 格式，例如：`AAPL.US` |
+| symbol | string | YES      | 股票代码，使用 `ticker.region` 格式，例如：`AAPL.US` |
 
 ### Request Example
 
@@ -250,7 +250,7 @@ func main() {
 | Status | Description | Schema                                        |
 | ------ | ----------- | --------------------------------------------- |
 | 200    | 返回成功    | [topics_response](#schematopics_response)     |
-| 500    | 內部錯誤    | None                                          |
+| 500    | 内部错误    | None                                          |
 
 ## Schemas
 
@@ -260,12 +260,12 @@ func main() {
 
 | Name               | Type      | Required | Description                   |
 | ------------------ | --------- | -------- | ----------------------------- |
-| items              | object[]  | true     | 討論列表                      |
-| ∟ id               | string    | true     | 討論 ID                       |
-| ∟ title            | string    | true     | 標題                          |
+| items              | object[]  | true     | 讨论列表                      |
+| ∟ id               | string    | true     | 讨论 ID                       |
+| ∟ title            | string    | true     | 标题                          |
 | ∟ description      | string    | true     | 摘要/描述                     |
-| ∟ url              | string    | true     | 討論詳情鏈接                  |
-| ∟ published_at     | string    | true     | 發佈時間，Unix 時間戳（秒）   |
-| ∟ comments_count   | int32     | true     | 評論數                        |
-| ∟ likes_count      | int32     | true     | 點贊數                        |
-| ∟ shares_count     | int32     | true     | 分享數                        |
+| ∟ url              | string    | true     | 讨论详情链接                  |
+| ∟ published_at     | string    | true     | 发布时间，Unix 时间戳（秒）   |
+| ∟ comments_count   | int32     | true     | 评论数                        |
+| ∟ likes_count      | int32     | true     | 点赞数                        |
+| ∟ shares_count     | int32     | true     | 分享数                        |

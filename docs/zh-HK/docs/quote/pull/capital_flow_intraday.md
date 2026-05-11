@@ -1,36 +1,36 @@
 ---
 id: quote_capital_flow_intraday
-title: Security Capital Flow Intraday
+title: 獲取標的當日資金流向
 slug: capital-flow-intraday
 sidebar_position: 17
 ---
 
-This API is used to obtain the daily capital flow intraday of security.
+該接口用於獲取標的當日的資金流向。
 
 <QuotePermission command="capital" />
 
 <CliCommand>
-# intraday capital flow time series for Tesla
-longbridge capital flow TSLA.US
-# intraday capital flow time series for Apple
-longbridge capital flow AAPL.US
-# intraday capital flow time series for NVDA
-longbridge capital flow NVDA.US
+# Tesla 今日資金流向時序
+longbridge capital TSLA.US --flow
+# Apple 今日資金流向時序
+longbridge capital AAPL.US --flow
+# NVDA 今日資金流向時序
+longbridge capital NVDA.US --flow
 </CliCommand>
 
 <SDKLinks module="quote" klass="QuoteContext" method="capital_flow" />
 
 :::info
-[Business Command](../../socket/biz-command)：`24`
+[業務指令](../../socket/biz_command)：`24`
 :::
 
 ## Request
 
 ### Parameters
 
-| Name   | Type   | Required | Description                                                     |
-| ------ | ------ | -------- | --------------------------------------------------------------- |
-| symbol | string | Yes      | Security code, in `ticker.region` format, for example: `700.HK` |
+| Name   | Type   | Required | Description                                          |
+| ------ | ------ | -------- | ---------------------------------------------------- |
+| symbol | string | 是       | 標的代碼，使用 `ticker.region` 格式，例如： `700.HK` |
 
 ### Protobuf
 
@@ -82,12 +82,10 @@ if __name__ == "__main__":
 const { Config, QuoteContext, OAuth } = require('longbridge')
 
 async function main() {
-  const oauth = await OAuth.build('your-client-id', (_, url) => {
-    console.log('Open this URL to authorize: ' + url)
-  })
+  const oauth = await OAuth.build("your-client-id", (_, url) => { console.log("Open this URL to authorize: " + url) })
   const config = Config.fromOAuth(oauth)
   const ctx = QuoteContext.new(config)
-  const resp = await ctx.capitalFlow('700.HK')
+  const resp = await ctx.capitalFlow("700.HK")
   console.log(resp)
 }
 main().catch(console.error)
@@ -102,9 +100,7 @@ import com.longbridge.quote.*;
 
 class Main {
     public static void main(String[] args) throws Exception {
-        try (OAuth oauth = new OAuthBuilder("your-client-id")
-                .build(url -> System.out.println("Open to authorize: " + url))
-                .get();
+        try (OAuth oauth = new OAuthBuilder("your-client-id").build(url -> System.out.println("Open to authorize: " + url)).get();
              Config config = Config.fromOAuth(oauth);
              QuoteContext ctx = QuoteContext.create(config)) {
             CapitalFlowLine[] resp = ctx.getCapitalFlow("700.HK").get();
@@ -123,9 +119,7 @@ use longbridge::{oauth::OAuthBuilder, quote::QuoteContext, Config};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let oauth = OAuthBuilder::new("your-client-id")
-        .build(|url| println!("Open this URL to authorize: {url}"))
-        .await?;
+    let oauth = OAuthBuilder::new("your-client-id").build(|url| println!("Open this URL to authorize: {url}")).await?;
     let config = Arc::new(Config::from_oauth(oauth));
     let (ctx, _) = QuoteContext::new(config);
     let resp = ctx.capital_flow("700.HK").await?;
@@ -155,10 +149,7 @@ run(const OAuth& oauth)
     QuoteContext ctx = QuoteContext::create(config);
 
     ctx.capital_flow("700.HK", [](auto res) {
-        if (!res) {
-            std::cout << "failed: " << *res.status().message() << std::endl;
-            return;
-        }
+        if (!res) { std::cout << "failed: " << *res.status().message() << std::endl; return; }
         std::cout << "capital_flow lines: " << res->size() << std::endl;
     });
 }
@@ -228,16 +219,17 @@ func main() {
   </TabItem>
 </Tabs>
 
+
 ## Response
 
 ### Response Properties
 
-| Name               | Type     | Description                    |
-| ------------------ | -------- | ------------------------------ |
-| symbol             | string   | Security code                  |
-| capital_flow_lines | object[] | Capital flow data              |
-| ∟ inflow           | string   | Inflow capital data            |
-| ∟ timestamp        | int64    | Start time stamp of the minute |
+| Name               | Type     | Description    |
+| ------------------ | -------- | -------------- |
+| symbol             | string   | 標的代碼       |
+| capital_flow_lines | object[] | 資金流向數據   |
+| ∟ inflow           | string   | 淨流入         |
+| ∟ timestamp        | int64    | 分鐘開始時間戳 |
 
 ### Protobuf
 
@@ -267,13 +259,13 @@ message CapitalFlowIntradayResponse {
 }
 ```
 
-## Error Code
+## 錯誤碼
 
-| Protocol Error Code | Business Error Code | Description        | Troubleshooting Suggestions                                   |
-| ------------------- | ------------------- | ------------------ | ------------------------------------------------------------- |
-| 3                   | 301600              | Invalid request    | Invalid request parameters or unpacking request failed        |
-| 3                   | 301606              | Request rate limit | Reduce the frequency of requests                              |
-| 7                   | 301602              | Server error       | Please try again or contact a technician to resolve the issue |
-| 7                   | 301600              | Symbol not found   | Check that the requested `symbol` is correct                  |
-| 7                   | 301603              | No quotes          | Security no quote                                             |
-| 7                   | 301604              | No access          | No access to security quote                                   |
+| 協議錯誤碼 | 業務錯誤碼 | 描述           | 排查建議                     |
+| ---------- | ---------- | -------------- | ---------------------------- |
+| 3          | 301600     | 無效的請求     | 請求參數有誤或解包失敗       |
+| 3          | 301606     | 限流           | 降低請求頻次                 |
+| 7          | 301602     | 服務端內部錯誤 | 請重試或聯繫技術人員處理     |
+| 7          | 301600     | 請求標的不存在 | 檢查請求的 `symbol` 是否正確 |
+| 7          | 301603     | 標的無行情     | 標的沒有請求的行情數據       |
+| 7          | 301604     | 無權限         | 沒有獲取標的行情的權限       |
