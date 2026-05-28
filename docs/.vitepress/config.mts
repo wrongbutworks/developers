@@ -26,6 +26,12 @@ const insertScript = (html: string) => {
     `<script>window.__API_PROXY_URL__ = ${JSON.stringify(process.env.VITE_PORTAL_GATEWAY_BASE_URL)}</script>`,
     `<script defer˝ src="https://assets.lbctrl.com/uploads/b63bb77e-74b5-43d3-8bf4-d610be91c838/longport-internal.iife.js"></script>`
   )
+  // Google One Tap：CDN bundle，加载即自动触发；cn 区不注入（Google 不可用）。
+  // 不传 data-region：bundle 自行按 app-id cookie → region cookie → sg 兜底
+  //（本站为 .longbridge.com 一方域名，可读到 session cookie）。
+  if (process.env.VITE_REGION !== 'cn') {
+    $('head').append(`<script src="https://assets.wbrks.com/plugin/session/google-one-tap.es.js"></script>`)
+  }
   return $.html()
 }
 
