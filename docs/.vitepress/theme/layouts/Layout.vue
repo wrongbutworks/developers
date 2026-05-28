@@ -1,26 +1,20 @@
 <script setup lang="ts">
-import UserAvatar from '../components/UserAvatar/index.vue'
-import DashboardNavLink from '../components/DashboardNavLink.vue'
 import MockLoginPanel from '../components/MockLoginPanel.vue'
 import Breadcrumb from '../components/Breadcrumb/index.vue'
 import Layout from './LayoutInner.vue'
-import { useI18nSync, useHighlighter, useLLMMarkdownLink } from '../composables'
+import { useI18nSync, useHighlighter, useLLMMarkdownLink, useLbDarkSync } from '../composables'
 
 const isDev = import.meta.env.DEV
 
-// 使用抽离的 hooks
 useI18nSync()
 useHighlighter()
+useLbDarkSync()
 
 const { llmMarkdownLink } = useLLMMarkdownLink()
 </script>
 
 <template>
   <Layout>
-    <template #nav-bar-content-after>
-      <DashboardNavLink />
-      <UserAvatar />
-    </template>
     <template #layout-bottom>
       <MockLoginPanel v-if="isDev" />
     </template>
@@ -40,21 +34,6 @@ const { llmMarkdownLink } = useLLMMarkdownLink()
 </template>
 
 <style>
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root),
-.dark::view-transition-new(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root),
-.dark::view-transition-old(root) {
-  z-index: 9999;
-}
 
 .VPSwitchAppearance {
   width: 22px !important;

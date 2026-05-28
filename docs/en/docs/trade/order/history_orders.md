@@ -1,6 +1,7 @@
 ﻿---
 slug: history_orders
-title: Get History Order
+sidebar_position: 3
+title: History Orders
 language_tabs: false
 toc_footers: []
 includes: []

@@ -6,6 +6,65 @@ sidebar_position: 7
 sidebar_icon: newspaper
 ---
 
+## 2026-05-22
+
+### CLI v0.22.0
+
+- **`shareholder --top`** — 前 20 大股东（机构、个人、内部人）多报告期持股对比；`--object-id <id>` 查看单一股东持仓历史及交易明细
+- **`short-positions`** — 新增港股支持（`.HK` 自动路由至港交所沽空持仓数据），与美股 FINRA 数据统一接口
+- **`short-trades`** — 每日沽空成交量（美股：FINRA/纳斯达克；港股：港交所披露数据）
+- **`compare`** — 多股估值对比（PE/PB/PS/市值/收盘价），不传对比股票时服务端自动选取同行业标的
+- **`top-movers`** — 价格波动超近 20 日标准差的异动股票，系统自动关联相关新闻解读；支持 `--market`、`--sort time|change|hot` 筛选
+- **`screener` 命令组** — 股票筛选工具：`strategies`（推荐/我的策略）、`search --strategy-id <id>` 或 `--filter key:min:max` 执行筛选、`indicators` 查看可用指标
+- **`rank`** — 人气排行榜；不带 `--key` 列出所有分类，`--key <key>` 获取对应排行（如 `ib_hot_all-us`）
+- MCP 服务同步新增相同工具
+
+### SDK v4.2.0
+
+- **FundamentalContext** — 新增 `shareholder_top`、`shareholder_detail`、`valuation_comparison`
+- **QuoteContext** — `short_positions` 统一支持美股和港股；新增 `short_trades`
+- **MarketContext** — 新增 `top_movers`、`rank_categories`、`rank_list`
+- **新增 ScreenerContext** — `screener_recommend_strategies`、`screener_user_strategies`、`screener_strategy`、`screener_search`、`screener_indicators`
+- 覆盖语言：Rust / Python / Node.js / Java / C / C++ / Go
+
+## 2026-05-15
+
+### CLI v0.21.0
+
+- **`industry-rank`** — 按市场（US/HK/CN/SG）查看行业强弱排名；配合 `industry-peers` 展开任意板块的完整竞争格局
+- **`industry-peers`** — 行业子板块树形结构，展示各节点的股票数、当日涨跌和年初至今涨跌
+- **`business-segments`** — 按业务分部拆解营收，支持当期数据或历史趋势对比
+- **`financial-report snapshot`** — AI 生成财报摘要，含营收、EBIT、净利润相对分析师预期的差距分析
+- **`institution-rating --views`** — 逐月展示机构评级分布（买入/持有/卖出）的变化趋势
+- MCP 服务同步新增相同功能（工具总数达 133 个）
+
+## 2026-05-13
+
+### SDK v4.1.0
+
+- **7 个新 Context 类型，共 66 个方法** — `FundamentalContext`（20 个方法：财报、分析师评级、股息、EPS 预测、一致性预期、估值），`MarketContext`（9 个方法：市场状态、券商持仓、A/H 溢价、交易统计），`CalendarContext`（7 个方法：财报 / 股息 / 拆股 / IPO 日历），`PortfolioContext`（5 个方法：汇率、盈亏分析），`AlertContext`（4 个方法：股价提醒），`DCAContext`（12 个方法：定投计划全生命周期），`SharelistContext`（9 个方法：自选股列表）
+- **QuoteContext** — 新增 4 个方法：`short_positions`、`option_volume`、`option_volume_daily`、`update_pinned`
+- **ContentContext** — 新增 `topic_detail` 及话题回复相关方法
+- **Rust SDK** — `Config::header()` 支持注入自定义 HTTP/WebSocket 请求头
+- 参数类型改用 typed enum 替代原始整数；货币字段使用 `Decimal` 类型
+
+### 文档
+
+- 侧边栏重构：新增 **资讯与社区** 分类（含资讯、话题、自选股）；行情 **Watchlist** 替代 Individual；**附录** 替代 Socket Feed（默认折叠）
+- 文档总览新增 **Fundamental** 和 **资讯与社区** 章节介绍
+
+## 2026-05-08
+
+### CLI v0.20.0
+
+- **`ipo` 命令组** — 港股完整 IPO 工具（`subscriptions`、`wait-listing`、`listed`、`calendar`、`detail`、`orders`、`profit-loss`），美股支持 `us-subscriptions`、`us-wait-listing`、`us-listed`
+- **`financial-statement`** — 完整逐行财务报表（利润表 / 资产负债表 / 现金流量表），含层级结构与 YoY 对比；`financial-report --latest` 快速获取关键指标摘要
+- **`valuation-rank`** — 每日 PE/PB/PS 行业百分位排名
+- **`institution-rating --history` / `--industry-rank`** — 分析师评级变化历史与行业覆盖排名
+- **`news search` / `topic search`** — 关键词搜索资讯和社区话题
+- **`bank-cards`**、**`withdrawals`**、**`deposits`** — 银行卡及出入金记录查询
+- **`portfolio short-margin`** — 各持仓融券保证金明细
+
 ## 2026-05-05
 
 ### CLI v0.19.2
@@ -67,7 +126,7 @@ sidebar_icon: newspaper
 ### CLI v0.16.3
 
 - **`auth` 子命令组** — `longbridge auth login` / `auth logout` / `auth status`；`auth status` 本地查看 Token 有效性和账户信息，无需网络
-- **`alert enable` / `alert disable`** — 切换价格提醒启用状态，无需删除重建
+- **`alert enable` / `alert disable`** — 切换股价提醒启用状态，无需删除重建
 - **修复：美股指数 symbol** — `.DJI.US`、`.VIX.US` 现已正确解析；美股指数需要前置点号
 - **"你是否想查询…" 提示** — 查询无结果时给出 symbol 格式建议
 

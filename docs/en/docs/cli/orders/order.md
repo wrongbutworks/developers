@@ -56,6 +56,22 @@ longbridge order sell TSLA.US 5 --price 360.00
 
 Places a limit sell order for 5 shares of TSLA at $360.00. The command prompts for confirmation before submitting.
 
+### Short sell (no existing position)
+
+```bash
+longbridge order sell META.US 1 --price 620.00
+```
+
+Submitting a sell order for a symbol with no existing position opens a short. No special flags are required. To close the short, submit a buy order for the same symbol and quantity.
+
+**Market support:**
+
+**US stocks** can be shorted directly with no additional setup.
+
+**HK stocks** require activation: open the Longbridge mobile app, place your first HK short sell order — the app will trigger a Securities Borrowing and Lending (SBL) agreement signing flow. Complete the signing and wait for approval. Note: HK short selling is subject to a fee levied by the Hong Kong Inland Revenue Department; details are described in the in-app agreement. The API returns error `602301` before the HK SBL agreement is signed.
+
+**A-share (SH/SZ)** short selling is not supported — the CLI does not support Northbound (Stock Connect) trading.
+
 ### View trade executions
 
 ```bash

@@ -26,6 +26,12 @@ const insertScript = (html: string) => {
     `<script>window.__API_PROXY_URL__ = ${JSON.stringify(process.env.VITE_PORTAL_GATEWAY_BASE_URL)}</script>`,
     `<script defer˝ src="https://assets.lbctrl.com/uploads/b63bb77e-74b5-43d3-8bf4-d610be91c838/longport-internal.iife.js"></script>`
   )
+  // Google One Tap：CDN bundle，加载即自动触发；cn 区不注入（Google 不可用）。
+  // 不传 data-region：bundle 自行按 app-id cookie → region cookie → sg 兜底
+  //（本站为 .longbridge.com 一方域名，可读到 session cookie）。
+  if (process.env.VITE_REGION !== 'cn') {
+    $('head').append(`<script src="https://assets.wbrks.com/plugin/session/google-one-tap.es.js"></script>`)
+  }
   return $.html()
 }
 
@@ -38,6 +44,7 @@ export default defineConfig(
     metaChunk: true,
     ignoreDeadLinks: true,
     base: '/',
+    buildConcurrency: 10,
 
     srcExclude: ['README.md', ...regionSrcExclude],
     rewrites: rewriteMarkdownPath,
@@ -76,7 +83,13 @@ export default defineConfig(
         ['meta', { property: 'og:url', content: `${siteHost}/${localePathname}` }],
         ['meta', { property: 'og:title', content: context.title }],
         ['meta', { property: 'og:description', content: context.description }],
-        ['meta', { name: 'twitter:image', content: 'https://assets.lbctrl.com/uploads/b510b04f-9238-4fe0-b39d-11e076876ac1/longbridge-og.png' }],
+        [
+          'meta',
+          {
+            name: 'twitter:image',
+            content: 'https://assets.lbctrl.com/uploads/b510b04f-9238-4fe0-b39d-11e076876ac1/longbridge-og.png',
+          },
+        ],
         ['meta', { name: 'twitter:title', content: context.title }],
         ['meta', { name: 'twitter:description', content: context.description }],
       ]
@@ -91,20 +104,15 @@ export default defineConfig(
       const tmpDir = resolve(__dirname, '../../.tmp-longbridge-skills')
       rmSync(tmpDir, { recursive: true, force: true })
       try {
-        execSync(
-          `git clone --depth 1 --branch main https://github.com/longbridge/skills.git "${tmpDir}"`,
-          { stdio: 'inherit' }
-        )
+        execSync(`git clone --depth 1 --branch main https://github.com/longbridge/skills.git "${tmpDir}"`, {
+          stdio: 'inherit',
+        })
       } catch (err) {
-        throw new Error(
-          `Failed to clone longbridge/skills@main: ${(err as Error).message}`
-        )
+        throw new Error(`Failed to clone longbridge/skills@main: ${(err as Error).message}`)
       }
       const skillsSrcDir = resolve(tmpDir, 'skills')
       if (!existsSync(skillsSrcDir)) {
-        throw new Error(
-          `longbridge/skills@main is missing the "skills/" directory; cannot build skill zips`
-        )
+        throw new Error(`longbridge/skills@main is missing the "skills/" directory; cannot build skill zips`)
       }
 
       // Pack all skills into longbridge-all.zip
@@ -166,11 +174,10 @@ export default defineConfig(
         text: 'Edit',
       },
       logo: {
-        light: 'https://assets.wbrks.com/assets/logo/light/logo.svg',
-        dark: 'https://assets.wbrks.com/assets/logo/dark/logo.svg',
-        width: 48,
-        height: 48,
+        light: 'https://assets.lbkrs.com/uploads/e76f6d93-80f8-4f9b-8b8d-2c86f0c94a78/longbridge-developers-light.png',
+        dark: 'https://assets.lbkrs.com/uploads/37a18fa4-46a4-408c-a36a-560004eb3cfb/longbridge-developers-dark.png',
       },
+      siteTitle: false,
       search: {
         provider: 'local',
       },
@@ -180,7 +187,7 @@ export default defineConfig(
 
     vite: {
       ssr: {
-        noExternal: ['vue-i18n'],
+        noExternal: ['vue-i18n', 'mark.js'],
       },
       server: {
         port: 8000,
@@ -203,6 +210,18 @@ export default defineConfig(
       },
       build: {
         chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+          output: {
+            manualChunks(id) {
+              if (id.includes('node_modules')) {
+                if (id.includes('shiki') || id.includes('shikiji')) return 'shiki'
+                if (id.includes('@vue') || id.includes('vue-demi')) return 'vue-vendor'
+                if (id.includes('unocss') || id.includes('@unocss')) return 'unocss'
+                return 'vendor'
+              }
+            },
+          },
+        },
       },
       resolve: {
         alias: [
@@ -217,6 +236,15 @@ export default defineConfig(
         ],
       },
       plugins: [
+        {
+          name: 'gc-between-bundles',
+          buildEnd() {
+            if (typeof global.gc === 'function') {
+              global.gc()
+              console.log('✓ GC triggered after bundle')
+            }
+          },
+        },
         {
           name: 'yaml-transform',
           transform(src: string, id: string) {

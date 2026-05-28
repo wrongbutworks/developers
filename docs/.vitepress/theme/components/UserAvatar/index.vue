@@ -44,11 +44,11 @@ const { avatar } = useAvatar()
 const list = computed<{ title: string; href: string }[]>(() => [
   {
     title: t('HD2WD-CgkkcJJW12yOmDM'),
-    href: localePath('/account'),
+    href: '/dashboard',
   },
   {
     title: t('JJTHzcLZRxvS2W-2IwWMn'),
-    href: localePath('/log-out'),
+    href: '/log-out',
   },
 ])
 
@@ -128,7 +128,6 @@ onUnmounted(() => {
   position: relative;
   margin-right: -8px;
 }
-
 
 .VPFlyout:hover {
   color: var(--vp-c-brand-1);

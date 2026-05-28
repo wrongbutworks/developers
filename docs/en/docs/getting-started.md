@@ -417,17 +417,17 @@ Please pay attention to protect your **Access Token** information, anyone who ge
 
 **Other environment variables:**
 
-| Name                               | Description                                                                                                                                                             |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `LONGBRIDGE_LANGUAGE`              | Language identifier, `zh-CN`, `zh-HK` or `en` (Default: `en`)                                                                                                           |
-| `LONGBRIDGE_HTTP_URL`              | HTTP endpoint url (Default: `https://openapi.longbridge.com`)                                                                                                           |
-| `LONGBRIDGE_QUOTE_WS_URL`          | Quote websocket endpoint url (Default: `wss://openapi-quote.longbridge.com/v2`)                                                                                         |
-| `LONGBRIDGE_TRADE_WS_URL`          | Trade websocket endpoint url (Default: `wss://openapi-trade.longbridge.com/v2`)                                                                                         |
-| `LONGBRIDGE_REGION`                | Override API region; SDK auto-selects by network. Set to `cn` or `hk` if incorrect.                                                                                     |
+| Name                               | Description                                                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `LONGBRIDGE_LANGUAGE`              | Language identifier, `zh-CN`, `zh-HK` or `en` (Default: `en`)                                                                                                            |
+| `LONGBRIDGE_HTTP_URL`              | HTTP endpoint url (Default: `https://openapi.longbridge.com`)                                                                                                            |
+| `LONGBRIDGE_QUOTE_WS_URL`          | Quote websocket endpoint url (Default: `wss://openapi-quote.longbridge.com/v2`)                                                                                          |
+| `LONGBRIDGE_TRADE_WS_URL`          | Trade websocket endpoint url (Default: `wss://openapi-trade.longbridge.com/v2`)                                                                                          |
+| `LONGBRIDGE_REGION`                | Override API region; SDK auto-selects by network. Set to `cn` or `hk` if incorrect.                                                                                      |
 | `LONGBRIDGE_ENABLE_OVERNIGHT`      | Enable overnight quote, `true` or `false` (Default: `false`). Requires purchasing the "LV1 Real-time Quotes (OpenAPI)" quote card in the Longbridge App. US stocks only. |
-| `LONGBRIDGE_PUSH_CANDLESTICK_MODE` | `realtime` or `confirmed` (Default: `realtime`)                                                                                                                         |
-| `LONGBRIDGE_PRINT_QUOTE_PACKAGES`  | Print quote packages when connected, `true` or `false` (Default: `true`)                                                                                                |
-| `LONGBRIDGE_LOG_PATH`              | Set the path of the log files (Default: no logs)                                                                                                                        |
+| `LONGBRIDGE_PUSH_CANDLESTICK_MODE` | `realtime` or `confirmed` (Default: `realtime`)                                                                                                                          |
+| `LONGBRIDGE_PRINT_QUOTE_PACKAGES`  | Print quote packages when connected, `true` or `false` (Default: `true`)                                                                                                 |
+| `LONGBRIDGE_LOG_PATH`              | Set the path of the log files (Default: no logs)                                                                                                                         |
 
 :::info
 The SDK also accepts the legacy `LONGPORT_*` variable names for backward compatibility.
@@ -495,6 +495,118 @@ Windows is a little more complicated, we provide two methods to set the environm
    ```
 
    If it prints the value you just set correctly, then the environment variable is right.
+
+### Refresh Access Token
+
+:::info
+This applies to **Legacy API Key** authentication only. OAuth 2.0 tokens are refreshed automatically by the SDK.
+:::
+
+The Legacy API Key `Access Token` expires after 90 days by default. Call `Config.refresh_access_token()` to obtain a new token before it expires, then update your stored `LONGBRIDGE_ACCESS_TOKEN` with the returned value.
+
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python" default>
+
+```python
+from datetime import datetime, timedelta
+from longbridge.openapi import Config
+
+config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN")
+# Expire 3 years from now
+new_token = config.refresh_access_token(expired_at=datetime.now() + timedelta(days=365 * 3))
+print("New access token:", new_token)
+# Use the new token to build a new Config, or persist it as LONGBRIDGE_ACCESS_TOKEN
+new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
+const { Config } = require('longbridge')
+
+const config = Config.fromApikey('YOUR_APP_KEY', 'YOUR_APP_SECRET', 'YOUR_ACCESS_TOKEN')
+// Expire 3 years from now
+const expiredAt = new Date()
+expiredAt.setFullYear(expiredAt.getFullYear() + 3)
+const newToken = await config.refreshAccessToken(expiredAt)
+console.log('New access token:', newToken)
+// Use the new token to build a new Config, or persist it as LONGBRIDGE_ACCESS_TOKEN
+const newConfig = Config.fromApikey('YOUR_APP_KEY', 'YOUR_APP_SECRET', newToken)
+```
+
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+use longbridge::Config;
+use time::{Duration, OffsetDateTime};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN")?;
+    // Expire 3 years from now
+    let expired_at = OffsetDateTime::now_utc() + Duration::days(365 * 3);
+    let new_token = config.refresh_access_token(Some(expired_at)).await?;
+    println!("New access token: {}", new_token);
+    // Use the new token to build a new Config, or persist it as LONGBRIDGE_ACCESS_TOKEN
+    let new_config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", &new_token)?;
+    Ok(())
+}
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
+import com.longbridge.Config;
+import java.time.OffsetDateTime;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Config config = Config.fromApikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN");
+        // Expire 3 years from now
+        OffsetDateTime expiredAt = OffsetDateTime.now().plusYears(3);
+        String newToken = config.refreshAccessToken(expiredAt).get();
+        System.out.println("New access token: " + newToken);
+        // Use the new token to build a new Config, or persist it as LONGBRIDGE_ACCESS_TOKEN
+        Config newConfig = Config.fromApikey("YOUR_APP_KEY", "YOUR_APP_SECRET", newToken);
+    }
+}
+```
+
+  </TabItem>
+  <TabItem value="cpp" label="C++">
+
+```cpp
+#include <ctime>
+#include <iostream>
+#include <longbridge.hpp>
+
+using namespace longbridge;
+
+int main() {
+    Config config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN");
+    // Expire 3 years from now (Unix timestamp)
+    int64_t expired_at = static_cast<int64_t>(std::time(nullptr)) + 3LL * 365 * 24 * 3600;
+    config.refresh_access_token(expired_at, [](auto res) {
+        if (!res) {
+            std::cerr << "Error: " << *res.status().message() << std::endl;
+            return;
+        }
+        std::cout << "New access token: " << *res << std::endl;
+        // Use the new token to build a new Config, or persist it as LONGBRIDGE_ACCESS_TOKEN
+        Config new_config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", *res);
+    });
+    std::cin.get();
+    return 0;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+The `expired_at` parameter sets when the new token expires (default: **90 days** from now).
 
 ## Scene Demonstration
 
@@ -805,7 +917,7 @@ To subscribe to market data, please check the [Developer Center](https://open.lo
 - HK Market - BMP basic quotation is unable to subscribe with WebSocket as it has no real-time quote push.
 - US Market - Nasdaq Basic (Only OpenAPI).
 
-Before running, visit the [Developer Center](https://open.longbridge.com/account) and ensure that the account has the correct quote level.
+Before running, visit the [Developer Center](https://open.longbridge.com/dashboard) and ensure that the account has the correct quote level.
 
 :::info
 If you do not have the quotes authority, you can enter "Me - My Quotes - Store" to purchase the authority through the "Longbridge" mobile app.

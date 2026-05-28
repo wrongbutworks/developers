@@ -499,6 +499,118 @@ Windows 要稍微複雜一些，有以下兩種方式可以設定環境變量：
 
    如果你能正確列印你剛才設定的值，那麼環境變量就是對了。
 
+### 刷新 Access Token
+
+:::info
+本節僅適用於**傳統 API Key** 認證方式。OAuth 2.0 的 Token 由 SDK 自動刷新。
+:::
+
+傳統 API Key 的 `Access Token` 預設 90 天後過期。在過期前呼叫 `Config.refresh_access_token()` 取得新 Token，然後將回傳值更新至 `LONGBRIDGE_ACCESS_TOKEN`。
+
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python" default>
+
+```python
+from datetime import datetime, timedelta
+from longbridge.openapi import Config
+
+config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN")
+# 指定 3 年後過期
+new_token = config.refresh_access_token(expired_at=datetime.now() + timedelta(days=365 * 3))
+print("新 Access Token：", new_token)
+# 用新 token 建立新 Config，或將其持久化為 LONGBRIDGE_ACCESS_TOKEN
+new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
+const { Config } = require('longbridge')
+
+const config = Config.fromApikey('YOUR_APP_KEY', 'YOUR_APP_SECRET', 'YOUR_ACCESS_TOKEN')
+// 指定 3 年後過期
+const expiredAt = new Date()
+expiredAt.setFullYear(expiredAt.getFullYear() + 3)
+const newToken = await config.refreshAccessToken(expiredAt)
+console.log('新 Access Token：', newToken)
+// 用新 token 建立新 Config，或將其持久化為 LONGBRIDGE_ACCESS_TOKEN
+const newConfig = Config.fromApikey('YOUR_APP_KEY', 'YOUR_APP_SECRET', newToken)
+```
+
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+use longbridge::Config;
+use time::{Duration, OffsetDateTime};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN")?;
+    // 指定 3 年後過期
+    let expired_at = OffsetDateTime::now_utc() + Duration::days(365 * 3);
+    let new_token = config.refresh_access_token(Some(expired_at)).await?;
+    println!("新 Access Token：{}", new_token);
+    // 用新 token 建立新 Config，或將其持久化為 LONGBRIDGE_ACCESS_TOKEN
+    let new_config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", &new_token)?;
+    Ok(())
+}
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
+import com.longbridge.Config;
+import java.time.OffsetDateTime;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Config config = Config.fromApikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN");
+        // 指定 3 年後過期
+        OffsetDateTime expiredAt = OffsetDateTime.now().plusYears(3);
+        String newToken = config.refreshAccessToken(expiredAt).get();
+        System.out.println("新 Access Token：" + newToken);
+        // 用新 token 建立新 Config，或將其持久化為 LONGBRIDGE_ACCESS_TOKEN
+        Config newConfig = Config.fromApikey("YOUR_APP_KEY", "YOUR_APP_SECRET", newToken);
+    }
+}
+```
+
+  </TabItem>
+  <TabItem value="cpp" label="C++">
+
+```cpp
+#include <ctime>
+#include <iostream>
+#include <longbridge.hpp>
+
+using namespace longbridge;
+
+int main() {
+    Config config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN");
+    // 指定 3 年後過期（Unix 時間戳）
+    int64_t expired_at = static_cast<int64_t>(std::time(nullptr)) + 3LL * 365 * 24 * 3600;
+    config.refresh_access_token(expired_at, [](auto res) {
+        if (!res) {
+            std::cerr << "錯誤：" << *res.status().message() << std::endl;
+            return;
+        }
+        std::cout << "新 Access Token：" << *res << std::endl;
+        // 用新 token 建立新 Config，或將其持久化為 LONGBRIDGE_ACCESS_TOKEN
+        Config new_config = Config::from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", *res);
+    });
+    std::cin.get();
+    return 0;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+`expired_at` 參數用於指定新 Token 的過期時間（預設：從現在起 **90 天**後）。
+
 ## 場景示範
 
 ### 獲取資產總覽
@@ -795,12 +907,12 @@ g++ -std=c++17 account_asset.cpp -o account_asset -llongbridge && ./account_asse
 
 ### 訂閱實時行情
 
-訂閱行情數據請檢查 [開發者中心](https://open.longbridge.com/account) - "行情權限"是否正確
+訂閱行情數據請檢查 [開發者中心](https://open.longbridge.com/dashboard) - "行情權限"是否正確
 
 - 港股 - BMP 基礎報價，無實時行情推送，無法用 WebSocket 訂閱
 - 美股 - 納斯達克 Basic 行情（只限 OpenAPI）
 
-運行前訪問 [開發者中心](https://open.longbridge.com/account)，檢查確保賬戶有正確的行情權限。
+運行前訪問 [開發者中心](https://open.longbridge.com/dashboard)，檢查確保賬戶有正確的行情權限。
 
 :::info
 

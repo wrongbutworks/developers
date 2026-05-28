@@ -1,0 +1,221 @@
+---
+slug: sharelist-detail
+title: 股單詳情
+sidebar_position: 5
+language_tabs: false
+toc_footers: []
+includes: []
+search: true
+highlight_theme: ''
+headingLevel: 2
+---
+
+獲取股單詳情，包括名稱、描述及成分股列表。
+
+<CliCommand>
+longbridge sharelist detail 123
+</CliCommand>
+
+<SDKLinks module="sharelist" klass="SharelistContext" method="detail" />
+
+
+## Parameters
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| id | integer | 是 | 股單 ID |
+
+## Request Example
+
+<Tabs groupId="request-example">
+  <TabItem value="python" label="Python">
+
+```python
+from longbridge.openapi import SharelistContext, Config, OAuthBuilder
+
+oauth = OAuthBuilder("your-client-id").build(lambda url: print("Visit:", url))
+config = Config.from_oauth(oauth)
+ctx = SharelistContext(config)
+
+resp = ctx.detail(123)
+print(resp)
+```
+
+  </TabItem>
+  <TabItem value="python-async" label="Python (async)">
+
+```python
+import asyncio
+from longbridge.openapi import AsyncSharelistContext, Config, OAuthBuilder
+
+async def main() -> None:
+    oauth = await OAuthBuilder("your-client-id").build_async(lambda url: print("Visit:", url))
+    config = Config.from_oauth(oauth)
+    ctx = AsyncSharelistContext.create(config)
+
+    resp = await ctx.detail(123)
+    print(resp)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```javascript
+const { Config, SharelistContext, OAuth } = require('longbridge')
+
+async function main() {
+  const oauth = await OAuth.build('your-client-id', (_, url) => {
+    console.log('Open this URL to authorize: ' + url)
+  })
+  const config = Config.fromOAuth(oauth)
+  const ctx = SharelistContext.new(config)
+  const resp = await ctx.detail(123)
+  console.log(resp)
+}
+main().catch(console.error)
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
+import com.longbridge.*;
+import com.longbridge.sharelist.*;
+
+class Main {
+    public static void main(String[] args) throws Exception {
+        try (OAuth oauth = new OAuthBuilder("your-client-id").build(url -> System.out.println("Open to authorize: " + url)).get();
+             Config config = Config.fromOAuth(oauth);
+             SharelistContext ctx = SharelistContext.create(config)) {
+            var resp = ctx.detail(123).get();
+            System.out.println(resp);
+        }
+    }
+}
+```
+
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+use std::sync::Arc;
+use longbridge::{oauth::OAuthBuilder, sharelist::SharelistContext, Config};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let oauth = OAuthBuilder::new("your-client-id").build(|url| println!("Open: {url}")).await?;
+    let config = Arc::new(Config::from_oauth(oauth));
+    let ctx = SharelistContext::new(config);
+    let resp = ctx.detail(123).await?;
+    println!("{:?}", resp);
+    Ok(())
+}
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/longbridge/openapi-go/config"
+	"github.com/longbridge/openapi-go/oauth"
+	"github.com/longbridge/openapi-go/sharelist"
+)
+
+func main() {
+	o := oauth.New("your-client-id").
+		OnOpenURL(func(url string) { fmt.Println("Open this URL to authorize:", url) })
+	if err := o.Build(context.Background()); err != nil {
+		log.Fatal(err)
+	}
+	conf, err := config.New(config.WithOAuthClient(o))
+	if err != nil {
+		log.Fatal(err)
+	}
+	c, err := sharelist.NewFromCfg(conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer c.Close()
+	resp, err := c.Detail(context.Background(), 123)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v\n", resp)
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## Response
+
+
+### Response Example
+
+```json
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    "id": 123,
+    "name": "AI Picks",
+    "description": "Top AI infrastructure stocks",
+    "securities": ["AAPL.US", "NVDA.US"]
+  }
+}
+```
+
+### Response Status
+
+| Status | Description | Schema |
+| ------ | ----------- | ------ |
+| 200    | 成功        | [SharelistDetail](#SharelistDetail) |
+| 400    | 請求錯誤    | None   |
+
+## Schemas
+
+### SharelistDetailResponse
+
+<a id="SharelistDetailResponse"></a>
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| sharelist | object | true | 股單詳情 |
+| scopes | object | false | 訂閱權限資訊 |
+
+### SharelistInfo
+
+<a id="SharelistInfo"></a>
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| id | integer | true | 股單 ID |
+| name | string | false | 名稱 |
+| description | string | false | 描述 |
+| cover | string | false | 封面圖 URL |
+| subscribers_count | integer | false | 訂閱人數 |
+| chg | string | false | 當日漲跌幅 |
+| this_year_chg | string | false | 年初至今漲跌幅 |
+| subscribed | boolean | false | 是否已訂閱 |
+| sharelist_type | integer | false | 類型：`0`=普通，`3`=官方，`4`=行業 |
+| industry_code | string | false | 行業代碼 |
+| stocks | object[] | false | 成分股列表，見 [SharelistStock](#SharelistStock) |
+
+### SharelistScopes
+
+<a id="SharelistScopes"></a>
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| is_self | boolean | false | 是否為建立者 |
+| subscription | boolean | false | 是否已訂閱 |

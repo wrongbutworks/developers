@@ -1,6 +1,7 @@
 ﻿---
 slug: today_executions
-title: Get Today Executions
+sidebar_position: 2
+title: Today Executions
 language_tabs: false
 toc_footers: []
 includes: []

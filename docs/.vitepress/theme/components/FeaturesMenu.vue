@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useData } from 'vitepress'
-import { localePath } from '../utils/i18n'
+import { useLocalePath } from '../utils/i18n'
 
 const { lang } = useData()
+const localePath = useLocalePath()
 
 const props = defineProps<{ screenMenu?: boolean }>()
 
@@ -29,50 +30,50 @@ const i18n: Record<string, FeatureItem[]> = {
     {
       title: 'Live Market Quotes',
       desc: 'Live prices & order book depth for global markets',
-      link: '/docs/cli/market-data/quote',
+      link: '/docs/quote/pull/quote',
       icon: icons.quote,
     },
     {
       title: 'Price History',
       desc: 'OHLCV candlestick & intraday historical data',
-      link: '/docs/cli/market-data/kline',
+      link: '/docs/quote/pull/history-candlestick',
       icon: icons.kline,
     },
     {
       title: 'Financial Statements',
       desc: 'Earnings, balance sheet & cash flow data',
-      link: '/docs/cli/fundamentals/financial-report',
+      link: '/docs/fundamental/fundamental/financial-report',
       icon: icons.report,
     },
     {
       title: 'Analyst Estimates',
       desc: 'Consensus forecasts & institutional ratings',
-      link: '/docs/cli/fundamentals/consensus',
+      link: '/docs/fundamental/fundamental/consensus',
       icon: icons.consensus,
     },
-    { title: 'Company News', desc: 'Breaking news & market updates', link: '/docs/cli/content/news', icon: icons.news },
+    { title: 'Company News', desc: 'Breaking news & market updates', link: '/docs/content/news/news', icon: icons.news },
     {
       title: 'SEC Filings',
       desc: 'Annual reports, earnings & regulatory documents',
-      link: '/docs/cli/content/filing',
+      link: '/docs/quote/pull/filings',
       icon: icons.filing,
     },
     {
       title: 'Institutional',
       desc: 'Fund holdings & position changes',
-      link: '/docs/cli/research/investors',
+      link: '/docs/fundamental/fundamental/fund-holdings',
       icon: icons.investors,
     },
     {
       title: 'Options & Warrants',
       desc: 'Derivatives pricing, chain & screening data',
-      link: '/docs/cli/derivatives/option',
+      link: '/docs/quote/pull/option-quote',
       icon: icons.option,
     },
     {
       title: 'Order Execution',
       desc: 'Trade orders, portfolio & account management',
-      link: '/docs/cli/orders/order',
+      link: '/docs/trade/trade-overview',
       icon: icons.order,
     },
   ],
@@ -80,73 +81,73 @@ const i18n: Record<string, FeatureItem[]> = {
     {
       title: '实时行情报价',
       desc: '全球市场实时价格与盘口深度数据',
-      link: '/docs/cli/market-data/quote',
+      link: '/docs/quote/pull/quote',
       icon: icons.quote,
     },
-    { title: '历史价格', desc: 'OHLCV K 线与日内历史行情数据', link: '/docs/cli/market-data/kline', icon: icons.kline },
+    { title: '历史价格', desc: 'OHLCV K 线与日内历史行情数据', link: '/docs/quote/pull/history-candlestick', icon: icons.kline },
     {
       title: '财务报表',
       desc: '盈利、资产负债表与现金流量数据',
-      link: '/docs/cli/fundamentals/financial-report',
+      link: '/docs/fundamental/fundamental/financial-report',
       icon: icons.report,
     },
     {
       title: '分析师预测',
       desc: '机构评级与一致性盈利预期数据',
-      link: '/docs/cli/fundamentals/consensus',
+      link: '/docs/fundamental/fundamental/consensus',
       icon: icons.consensus,
     },
-    { title: '公司新闻', desc: '实时财经资讯与市场动态', link: '/docs/cli/content/news', icon: icons.news },
-    { title: '年报公告', desc: '年报、季报及监管申报文件', link: '/docs/cli/content/filing', icon: icons.filing },
+    { title: '公司新闻', desc: '实时财经资讯与市场动态', link: '/docs/content/news/news', icon: icons.news },
+    { title: '年报公告', desc: '年报、季报及监管申报文件', link: '/docs/quote/pull/filings', icon: icons.filing },
     {
       title: '机构持仓',
       desc: '基金持仓明细与仓位变动数据',
-      link: '/docs/cli/research/investors',
+      link: '/docs/fundamental/fundamental/fund-holdings',
       icon: icons.investors,
     },
     {
       title: '期权与权证',
       desc: '衍生品定价、期权链与筛选数据',
-      link: '/docs/cli/derivatives/option',
+      link: '/docs/quote/pull/option-quote',
       icon: icons.option,
     },
-    { title: '委托交易', desc: '交易委托、组合管理与账户操作', link: '/docs/cli/orders/order', icon: icons.order },
+    { title: '委托交易', desc: '交易委托、组合管理与账户操作', link: '/docs/trade/trade-overview', icon: icons.order },
   ],
   'zh-HK': [
     {
       title: '實時行情報價',
       desc: '全球市場實時價格與盤口深度數據',
-      link: '/docs/cli/market-data/quote',
+      link: '/docs/quote/pull/quote',
       icon: icons.quote,
     },
-    { title: '歷史價格', desc: 'OHLCV K 線與日內歷史行情數據', link: '/docs/cli/market-data/kline', icon: icons.kline },
+    { title: '歷史價格', desc: 'OHLCV K 線與日內歷史行情數據', link: '/docs/quote/pull/history-candlestick', icon: icons.kline },
     {
       title: '財務報表',
       desc: '盈利、資產負債表與現金流量數據',
-      link: '/docs/cli/fundamentals/financial-report',
+      link: '/docs/fundamental/fundamental/financial-report',
       icon: icons.report,
     },
     {
       title: '分析師預測',
       desc: '機構評級與一致性盈利預期數據',
-      link: '/docs/cli/fundamentals/consensus',
+      link: '/docs/fundamental/fundamental/consensus',
       icon: icons.consensus,
     },
-    { title: '公司新聞', desc: '實時財經資訊與市場動態', link: '/docs/cli/content/news', icon: icons.news },
-    { title: '年報財報', desc: '年報、季報及監管申報文件', link: '/docs/cli/content/filing', icon: icons.filing },
+    { title: '公司新聞', desc: '實時財經資訊與市場動態', link: '/docs/content/news/news', icon: icons.news },
+    { title: '年報財報', desc: '年報、季報及監管申報文件', link: '/docs/quote/pull/filings', icon: icons.filing },
     {
       title: '機構持倉',
       desc: '基金持倉明細與倉位變動數據',
-      link: '/docs/cli/research/investors',
+      link: '/docs/fundamental/fundamental/fund-holdings',
       icon: icons.investors,
     },
     {
       title: '期權與認股證',
       desc: '衍生品定價、期權鏈與篩選數據',
-      link: '/docs/cli/derivatives/option',
+      link: '/docs/quote/pull/option-quote',
       icon: icons.option,
     },
-    { title: '委託交易', desc: '交易委託、組合管理與賬戶操作', link: '/docs/cli/orders/order', icon: icons.order },
+    { title: '委託交易', desc: '交易委託、組合管理與賬戶操作', link: '/docs/trade/trade-overview', icon: icons.order },
   ],
 }
 
@@ -190,7 +191,7 @@ function close() {
   </div>
 
   <!-- Desktop hover dropdown layout -->
-  <div v-else class="relative flex items-center px-3" @mouseenter="open" @mouseleave="close">
+  <div v-else class="relative flex h-full items-center px-3" @mouseenter="open" @mouseleave="close">
     <button
       class="flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 font-[inherit] text-sm font-medium whitespace-nowrap transition-colors duration-250"
       :class="isOpen ? 'text-[var(--vp-c-brand-1)]' : 'text-[var(--vp-c-text-1)] hover:text-[var(--vp-c-brand-1)]'">
@@ -214,7 +215,7 @@ function close() {
     <Transition name="dropdown">
       <div
         v-if="isOpen"
-        class="dropdown-panel absolute top-[calc(100%-8px)] left-1/2 z-100 w-160 overflow-hidden rounded-xl border border-[var(--vp-c-divider)] bg-[var(--vp-c-bg)] p-2 shadow-lg dark:shadow-2xl">
+        class="dropdown-panel absolute top-full left-0 z-100 mt-3 w-160 overflow-hidden rounded-xl border border-[var(--vp-c-divider)] bg-[var(--vp-c-bg)] p-2 shadow-lg dark:shadow-2xl">
         <div class="grid grid-cols-3 gap-1">
           <a
             v-for="item in features"
@@ -308,7 +309,7 @@ function close() {
 }
 
 .dropdown-panel {
-  transform: translateX(-50%) translateZ(0);
+  transform: translateZ(0);
 }
 
 .dropdown-enter-active,
@@ -321,12 +322,12 @@ function close() {
 .dropdown-enter-from,
 .dropdown-leave-to {
   opacity: 0;
-  transform: translateX(-50%) translateZ(0) translateY(-4px);
+  transform: translateZ(0) translateY(-4px);
 }
 
 .dropdown-enter-to,
 .dropdown-leave-from {
   opacity: 1;
-  transform: translateX(-50%) translateZ(0) translateY(0);
+  transform: translateZ(0) translateY(0);
 }
 </style>

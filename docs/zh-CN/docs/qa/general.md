@@ -11,7 +11,7 @@ sidebar_position: 0
 
 ## Q2: 如何开通模拟账户调试？
 
-请访问 [开发者中心](https://open.longbridge.com/account/) 开启**模拟账户**并获得模拟账户对应的 App Key & Secret 以及 Access Token 等信息。
+请访问 [开发者中心](https://open.longbridge.com/dashboard/) 开启**模拟账户**并获得模拟账户对应的 App Key & Secret 以及 Access Token 等信息。
 
 ## Q3: 模拟调试的行情交易权限与真实账户相同吗？
 
@@ -23,7 +23,7 @@ sidebar_position: 0
 
 行情：支持港股、美股、A 股通市场实时行情，其中，美股全美行情、港股 Level2 等高级行情也可通过在线行情商店购买对应行情权益后，通过 OpenAPI 获取行情数据。
 
-交易：支持港美股股票、ETF、港股轮证交易，其中美股支持股票做空。美股 OTC、盘前盘后交易、期权交易在模拟账号下暂未支持。
+交易：支持港美股股票、ETF、港股轮证、美股期权交易，其中美股支持股票做空。美股 OTC、盘前盘后交易在模拟账号下暂未支持。
 
 ## Q5: 接口调用频次及数量限制
 

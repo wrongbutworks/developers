@@ -71,6 +71,16 @@ longbridge auth login
 
 完成后，AI 即可代你调用 `longbridge` 命令。
 
+**Claude Code 用户：** Claude 首次运行 `longbridge` 命令时会弹出权限确认提示。若要避免每次都被询问，可在项目的 `.claude/settings.json` 中添加以下配置（文件不存在时新建）：
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash(longbridge *)"]
+  }
+}
+```
+
 > 详细安装说明及完整命令列表参见 [CLI 文档](/zh-CN/docs/cli)。
 
 ### 方式 B：MCP
@@ -81,6 +91,18 @@ longbridge auth login
 
 ```
 https://openapi.longbridge.com/mcp
+```
+
+对于使用 JSON 配置文件的客户端（Claude Desktop、Cursor、Zed、Gemini CLI 等），将以下内容添加到 MCP 配置中：
+
+```json
+{
+  "mcpServers": {
+    "longbridge": {
+      "url": "https://openapi.longbridge.com/mcp"
+    }
+  }
+}
 ```
 
 > 中国大陆用户可使用加速地址：`https://openapi.longbridge.cn/mcp`

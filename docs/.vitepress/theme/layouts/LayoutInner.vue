@@ -6,17 +6,18 @@ import VPContent from 'vitepress/dist/client/theme-default/components/VPContent.
 import VPFooter from 'vitepress/dist/client/theme-default/components/VPFooter.vue'
 import Footer from '../components/HomePage/Footer.vue'
 import VPLocalNav from 'vitepress/dist/client/theme-default/components/VPLocalNav.vue'
-import VPNav from 'vitepress/dist/client/theme-default/components/VPNav.vue'
 import VPSidebar from 'vitepress/dist/client/theme-default/components/VPSidebar.vue'
 import VPSkipLink from 'vitepress/dist/client/theme-default/components/VPSkipLink.vue'
+import AppNav from '../components/AppNav.vue'
 import { useData } from 'vitepress'
 import { registerWatchers } from 'vitepress/dist/client/theme-default/composables/layout.js'
 import { useSidebarControl } from 'vitepress/dist/client/theme-default/composables/sidebar.js'
 import { useTryItMode } from '../composables'
 import TryItContent from '../components/TryIt/Content.vue'
-import Content from './Content.vue'
+import ContentWrapper from './Content.vue'
 import 'vitepress/theme'
 import ApiReference from '../components/ApiReference.vue'
+import ProgressBar from '../components/ProgressBar.vue'
 
 const { isOpen: isSidebarOpen, open: openSidebar, close: closeSidebar } = useSidebarControl()
 
@@ -37,16 +38,10 @@ provide('hero-image-slot-exists', heroImageSlotExists)
   <!-- @vue-ignore -->
   <div v-if="frontmatter.layout !== false" class="Layout" :class="frontmatter.pageClass">
     <slot name="layout-top" />
+    <ProgressBar />
     <VPSkipLink />
     <VPBackdrop class="backdrop" :show="isSidebarOpen" @click="closeSidebar" />
-    <VPNav>
-      <template #nav-bar-title-before><slot name="nav-bar-title-before" /></template>
-      <template #nav-bar-title-after><slot name="nav-bar-title-after" /></template>
-      <template #nav-bar-content-before><slot name="nav-bar-content-before" /></template>
-      <template #nav-bar-content-after><slot name="nav-bar-content-after" /></template>
-      <template #nav-screen-content-before><slot name="nav-screen-content-before" /></template>
-      <template #nav-screen-content-after><slot name="nav-screen-content-after" /></template>
-    </VPNav>
+    <AppNav />
     <VPLocalNav v-if="!isApiReference" :open="isSidebarOpen" @open-menu="openSidebar" />
 
     <VPSidebar v-if="!isApiReference" :open="isSidebarOpen">
@@ -58,7 +53,7 @@ provide('hero-image-slot-exists', heroImageSlotExists)
       <template #page-top><slot name="page-top" /></template>
       <template #page-bottom>
         <slot name="page-bottom" />
-        <div class="max-w-[1200px] mx-auto px-8">
+        <div v-if="frontmatter.pageClass !== 'new-home-page'" class="max-w-[1200px] mx-auto">
           <Footer />
         </div>
       </template>
@@ -91,9 +86,9 @@ provide('hero-image-slot-exists', heroImageSlotExists)
       <template #aside-ads-after><slot name="aside-ads-after" /></template>
     </VPContent>
     <ClientOnly v-else-if="showTryIt">
-      <Content>
+      <ContentWrapper>
         <TryItContent />
-      </Content>
+      </ContentWrapper>
     </ClientOnly>
     <ClientOnly v-else-if="isApiReference">
       <ApiReference />

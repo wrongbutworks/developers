@@ -7,6 +7,31 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.22.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.0)
+
+- **New `shareholder --top`** — Top-20 major shareholders (institutions, individuals, insiders) with multi-period comparison; `--object-id <id>` for single shareholder holding history and trade details
+- **Extended `short-positions`** — Added HK market support (`.HK` suffix auto-routes to HKEX short-position data)
+- **New `short-trades`** — Daily short sale volume (US: FINRA/NASDAQ; HK: HKEX disclosure data)
+- **New `compare`** — Multi-stock valuation comparison (PE/PB/PS/market-cap/close); server auto-selects peers when no comparison symbols given
+- **New `top-movers`** — Stocks whose price movement exceeds the 20-day standard deviation, with correlated news; supports `--market`, `--sort time|change|hot`
+- **New `screener` command group** — Stock screener: `strategies` (recommended/saved), `search --strategy-id <id>` or `--filter key:min:max`, `indicators` to list available filters
+- **New `rank`** — Popularity leaderboard; list all categories without `--key`, or pass `--key <key>` for a specific ranking (e.g. `ib_hot_all-us`)
+- MCP server updated with the same new tools
+
+### [v0.21.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.21.0)
+
+- **New: `business-segments`** — revenue breakdown by business segment, current period or historical trend
+- **New: `industry-rank`** — industry ranking by market (US/HK/CN/SG) and indicator; counter_id output feeds directly into `industry-peers`
+- **New: `industry-peers`** — hierarchical sub-sector tree with stock count, daily change, and YTD change per node
+- **New: `financial-report snapshot`** — AI earnings summary with beat/miss analysis vs consensus estimates and upcoming peer earnings dates
+- **New: `institution-rating --views`** — month-by-month buy/hold/sell distribution timeline
+
+### [v0.20.3](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.20.3)
+
+- **Breaking: `analyst-estimates` removed** — command has been removed; the same data is available via `consensus` (EPS and revenue estimates)
+- **Fix: HK symbol leading zeros** — inputs like `00700.HK` or `09988.HK` now correctly resolve to `700.HK` / `9988.HK`; `operating` updated to reflect HK-only data coverage
+- **Fix: `ipo detail`** — auto-detects market from symbol suffix (`SUJA.US` → US, `700.HK` → HK), so `--market` is no longer required; cleaner error message when no IPO data is found; Payment Deadline formatted as RFC 3339
+
 ### [v0.20.2](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.20.2)
 
 - **Fix: `institution-rating --history`** — restructured as a proper table with logical column ordering; timestamps formatted as `YYYY-MM-DD`; price targets rounded to 2 decimal places; `evaluate_history` capped to 20 most recent records
@@ -18,7 +43,6 @@ sidebar_icon: newspaper
 - **`financial-statement`** — detailed, hierarchical financial statements (income statement, balance sheet, cash flow) with full line-item breakdown and YoY comparison; supports `--kind IS/BS/CF/ALL` and `--report af/saf/qf/cumul`
 - **`financial-report --latest`** — new flag to fetch the latest report summary (key indicators: revenue, net profit, EPS, ROE, total assets) without fetching the full statement
 - **`valuation-rank`** — daily PE/PB/PS industry percentile rank over a date range, showing `rank/total` for each metric
-- **`analyst-estimates`** — EPS analyst consensus estimates (high/low/mean/median, coverage count) across historical and forward periods
 - **`institution-rating --history` / `--industry-rank`** — new flags: `--history` shows how analyst ratings and price targets have changed over time; `--industry-rank` ranks all stocks in the same industry by analyst coverage
 - **`news search` / `topic search`** — keyword search across news articles and community topics
 - **`bank-cards`** — list bank cards linked to your account

@@ -1,11 +1,51 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useData } from 'vitepress'
 import FlickeringGrid from '../inspira/FlickeringGrid.vue'
 import ColourfulText from '../inspira/ColourfulText.vue'
-import ShimmerButton from '../inspira/ShimmerButton.vue'
+import { localePath } from '../../utils/i18n'
 
-const { t } = useI18n()
+const { lang } = useData()
+
+const LOCALE = {
+  en: {
+    titlePrefix: 'Longbridge',
+    titleAccent: 'Developers',
+    powering: 'Powering',
+    subtitle:
+      'Real-time market data, trading, and financial intelligence — delivered through {skill}, {cli}, {mcp}, {sdk} and {openapi} for developers worldwide.',
+    keywords: { sdk: 'SDK', cli: 'CLI', skill: 'AI Skill', mcp: 'MCP', openapi: 'OpenAPI' },
+    cta: { getStarted: 'Get Started', readDocs: 'Docs' },
+  },
+  'zh-CN': {
+    titlePrefix: 'Longbridge',
+    titleAccent: 'Developers',
+    powering: '接入',
+    subtitle: '实时行情、交易和金融数据 — 通过 {skill}、{cli}、{mcp}、{sdk} 及 {openapi} 交付给全球开发者。',
+    keywords: { sdk: 'SDK', cli: 'CLI', skill: 'AI Skill', mcp: 'MCP', openapi: 'OpenAPI' },
+    cta: { getStarted: '快速开始', readDocs: '阅读文档' },
+  },
+  'zh-HK': {
+    titlePrefix: 'Longbridge',
+    titleAccent: 'Developers',
+    powering: '接入',
+    subtitle: '即時行情、交易和金融數據 — 透過 {skill}、{cli}、{mcp}、{sdk} 及 {openapi} 交付給全球開發者。',
+    keywords: { sdk: 'SDK', cli: 'CLI', skill: 'AI Skill', mcp: 'MCP', openapi: 'OpenAPI' },
+    cta: { getStarted: '快速開始', readDocs: '閱讀文檔' },
+  },
+}
+
+const content = computed(() => LOCALE[lang.value as keyof typeof LOCALE] ?? LOCALE.en)
+
+const subtitleHtml = computed(() => {
+  const kw = content.value.keywords
+  return content.value.subtitle
+    .replace(/\{skill\}/g, `<span class="hero-keyword">${kw.skill}</span>`)
+    .replace(/\{cli\}/g, `<span class="hero-keyword">${kw.cli}</span>`)
+    .replace(/\{mcp\}/g, `<span class="hero-keyword">${kw.mcp}</span>`)
+    .replace(/\{sdk\}/g, `<span class="hero-keyword">${kw.sdk}</span>`)
+    .replace(/\{openapi\}/g, `<span class="hero-keyword">${kw.openapi}</span>`)
+})
 
 // Brand color scheme from lbus design tokens
 const brandColors = [
@@ -40,10 +80,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => clearInterval(productInterval))
-
-// i18n computed
-const ctaGetStarted = computed(() => t('hero.cta.getStarted'))
-const ctaReadDocs = computed(() => t('hero.cta.readDocs'))
 </script>
 
 <template>
@@ -69,12 +105,12 @@ const ctaReadDocs = computed(() => t('hero.cta.readDocs'))
     <div class="hero-content">
       <!-- Title -->
       <h1 class="hero-title">
-        {{ $t('hero.title.prefix') }} <span class="hero-title-accent">{{ $t('hero.title.accent') }}</span>
+        {{ content.titlePrefix }} <span class="hero-title-accent">{{ content.titleAccent }}</span>
       </h1>
 
       <!-- Powering + dynamic product -->
       <div class="hero-powering">
-        <span class="hero-powering-label">{{ $t('hero.powering') }}</span>
+        <span class="hero-powering-label">{{ content.powering }}</span>
         <ClientOnly>
           <span :key="currentProduct" class="hero-product-text">
             <ColourfulText
@@ -87,41 +123,26 @@ const ctaReadDocs = computed(() => t('hero.cta.readDocs'))
       </div>
 
       <!-- Subtitle with brand-colored keywords -->
-      <i18n-t keypath="hero.subtitle" tag="p" class="hero-subtitle">
-        <template #sdk>
-          <span class="hero-keyword">{{ $t('hero.keyword.sdk') }}</span>
-        </template>
-        <template #cli>
-          <span class="hero-keyword">{{ $t('hero.keyword.cli') }}</span>
-        </template>
-        <template #skill>
-          <span class="hero-keyword">{{ $t('hero.keyword.skill') }}</span>
-        </template>
-        <template #mcp>
-          <span class="hero-keyword">{{ $t('hero.keyword.mcp') }}</span>
-        </template>
-        <template #openapi>
-          <span class="hero-keyword">{{ $t('hero.keyword.openapi') }}</span>
-        </template>
-      </i18n-t>
+      <p class="hero-subtitle" v-html="subtitleHtml" />
 
       <!-- CTA Buttons -->
       <div class="hero-cta">
-        <a href="https://open.longbridge.com/account" class="hero-link">
-          <ShimmerButton
-            :shimmer-color="'rgba(255,255,255,0.6)'"
-            shimmer-size="0.04em"
-            shimmer-duration="2.5s"
-            border-radius="100px"
-            :background="'var(--brand-100)'"
-            class="hero-btn-primary">
-            {{ ctaGetStarted }}
-          </ShimmerButton>
+        <a href="/dashboard" class="hero-btn-primary">
+          {{ content.cta.getStarted }}
         </a>
         <a href="/docs/" class="hero-cta-secondary">
-          {{ ctaReadDocs }}
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+          {{ content.cta.readDocs }}
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
           </svg>
         </a>
       </div>
@@ -279,50 +300,53 @@ const ctaReadDocs = computed(() => t('hero.cta.readDocs'))
   gap: 1.25rem;
 }
 
-.hero-link {
-  text-decoration: none !important;
-}
-
 .hero-btn-primary {
-  padding: 0.7rem 2.25rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff !important;
-  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--lb-btn-primary-h);
+  padding: 0 1.5rem;
+  font-size: var(--lb-btn-primary-fs);
+  font-weight: var(--lb-btn-primary-fw);
+  color: var(--lb-btn-primary-color) !important;
+  background: var(--lb-btn-primary-bg);
+  border-radius: var(--lb-btn-primary-radius);
+  text-decoration: none !important;
+  transition: opacity 0.2s;
 }
 
-:root.dark .hero-btn-primary {
-  color: #fff !important;
+.hero-btn-primary:hover {
+  opacity: 0.82;
 }
 
 .hero-cta-secondary {
   display: inline-flex;
   align-items: center;
+  height: var(--lb-btn-primary-h);
   gap: 0.375rem;
-  padding: 0.7rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--brand-100);
+  padding: 0 1.25rem;
+  font-size: var(--lb-btn-primary-fs);
+  font-weight: 400;
+  color: var(--vp-c-text-1) !important;
+  background: var(--lb-btn-secondary-bg);
+  border-radius: var(--lb-btn-secondary-radius);
   text-decoration: none !important;
-  border-radius: 100px;
-  border: 1.5px solid color-mix(in srgb, var(--brand-100) 40%, transparent);
-  transition: gap 0.2s, border-color 0.2s, background 0.2s;
-  background: transparent;
+  border: none;
+  transition:
+    background 0.2s,
+    gap 0.2s;
 }
 
 .hero-cta-secondary:hover {
+  background: rgba(200, 200, 200, 0.8);
   gap: 0.625rem;
-  border-color: var(--brand-100);
-  background: color-mix(in srgb, var(--brand-100) 6%, transparent);
 }
 
 :root.dark .hero-cta-secondary {
-  color: var(--brand-80, var(--brand-100));
-  border-color: color-mix(in srgb, var(--brand-80, var(--brand-100)) 35%, transparent);
+  color: var(--lb-btn-secondary-color) !important;
 }
 
 :root.dark .hero-cta-secondary:hover {
-  border-color: var(--brand-80, var(--brand-100));
-  background: color-mix(in srgb, var(--brand-80, var(--brand-100)) 8%, transparent);
+  background: rgba(100, 100, 100, 0.6);
 }
 </style>

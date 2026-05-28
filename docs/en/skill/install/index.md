@@ -73,6 +73,16 @@ longbridge auth login
 
 That's it. The AI can now call `longbridge` commands on your behalf.
 
+**Claude Code users:** The first time Claude runs a `longbridge` command, it will ask for permission. To allow all Longbridge commands without repeated prompts, add this to `.claude/settings.json` in your project (create the file if it doesn't exist):
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash(longbridge *)"]
+  }
+}
+```
+
 > See the [CLI reference](/docs/cli) for the full command list and installation details.
 
 ### Method B — MCP
@@ -83,6 +93,18 @@ Add the following as a remote MCP server in your AI tool:
 
 ```
 https://openapi.longbridge.com/mcp
+```
+
+For clients that use a JSON config file (Claude Desktop, Cursor, Zed, Gemini CLI, etc.), add this to your MCP config:
+
+```json
+{
+  "mcpServers": {
+    "longbridge": {
+      "url": "https://openapi.longbridge.com/mcp"
+    }
+  }
+}
 ```
 
 > Users in mainland China can use the accelerated endpoint: `https://openapi.longbridge.cn/mcp`

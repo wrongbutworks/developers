@@ -6,6 +6,65 @@ sidebar_position: 7
 sidebar_icon: newspaper
 ---
 
+## 2026-05-22
+
+### CLI v0.22.0
+
+- **`shareholder --top`** — 前 20 大股東（機構、個人、內部人）多報告期持股對比；`--object-id <id>` 查看單一股東持倉歷史及交易明細
+- **`short-positions`** — 新增港股支持（`.HK` 自動路由至港交所沽空持倉數據），與美股 FINRA 數據統一介面
+- **`short-trades`** — 每日沽空成交量（美股：FINRA/納斯達克；港股：港交所披露數據）
+- **`compare`** — 多股估值對比（PE/PB/PS/市值/收盤價），不傳對比股票時服務端自動選取同行業標的
+- **`top-movers`** — 價格波動超近 20 日標準差的異動股票，系統自動關聯相關新聞解讀；支持 `--market`、`--sort time|change|hot` 篩選
+- **`screener` 命令組** — 股票篩選工具：`strategies`（推薦/我的策略）、`search --strategy-id <id>` 或 `--filter key:min:max` 執行篩選、`indicators` 查看可用指標
+- **`rank`** — 人氣排行榜；不帶 `--key` 列出所有分類，`--key <key>` 獲取對應排行（如 `ib_hot_all-us`）
+- MCP 服務同步新增相同工具
+
+### SDK v4.2.0
+
+- **FundamentalContext** — 新增 `shareholder_top`、`shareholder_detail`、`valuation_comparison`
+- **QuoteContext** — `short_positions` 統一支持美股和港股；新增 `short_trades`
+- **MarketContext** — 新增 `top_movers`、`rank_categories`、`rank_list`
+- **新增 ScreenerContext** — `screener_recommend_strategies`、`screener_user_strategies`、`screener_strategy`、`screener_search`、`screener_indicators`
+- 覆蓋語言：Rust / Python / Node.js / Java / C / C++ / Go
+
+## 2026-05-15
+
+### CLI v0.21.0
+
+- **`industry-rank`** — 按市場（US/HK/CN/SG）查看行業強弱排名；配合 `industry-peers` 展開任意板塊的完整競爭格局
+- **`industry-peers`** — 行業子板塊樹形結構，展示各節點的股票數、當日漲跌和年初至今漲跌
+- **`business-segments`** — 按業務分部拆解營收，支援當期數據或歷史趨勢對比
+- **`financial-report snapshot`** — AI 生成財報摘要，含營收、EBIT、淨利潤相對分析師預期的差距分析
+- **`institution-rating --views`** — 逐月展示機構評級分佈（買入/持有/賣出）的變化趨勢
+- MCP 服務同步新增相同功能（工具總數達 133 個）
+
+## 2026-05-13
+
+### SDK v4.1.0
+
+- **7 個新 Context 類型，共 66 個方法** — `FundamentalContext`（20 個方法：財報、分析師評級、股息、EPS 預測、一致性預期、估值），`MarketContext`（9 個方法：市場狀態、券商持倉、A/H 溢價、交易統計），`CalendarContext`（7 個方法：財報 / 股息 / 拆股 / IPO 日曆），`PortfolioContext`（5 個方法：匯率、盈虧分析），`AlertContext`（4 個方法：股價提醒），`DCAContext`（12 個方法：定投計劃全生命週期），`SharelistContext`（9 個方法：自選股列表）
+- **QuoteContext** — 新增 4 個方法：`short_positions`、`option_volume`、`option_volume_daily`、`update_pinned`
+- **ContentContext** — 新增 `topic_detail` 及話題回覆相關方法
+- **Rust SDK** — `Config::header()` 支援注入自訂 HTTP/WebSocket 請求頭
+- 參數類型改用 typed enum 替代原始整數；貨幣欄位使用 `Decimal` 類型
+
+### 文件
+
+- 側邊欄重構：新增 **資訊與社區** 分類（含資訊、話題、自選股）；行情 **Watchlist** 替代 Individual；**附錄** 替代 Socket Feed（預設折疊）
+- 文件總覽新增 **Fundamental** 和 **資訊與社區** 章節介紹
+
+## 2026-05-08
+
+### CLI v0.20.0
+
+- **`ipo` 指令組** — 港股完整 IPO 工具（`subscriptions`、`wait-listing`、`listed`、`calendar`、`detail`、`orders`、`profit-loss`），美股支援 `us-subscriptions`、`us-wait-listing`、`us-listed`
+- **`financial-statement`** — 完整逐行財務報表（損益表 / 資產負債表 / 現金流量表），含層級結構與 YoY 對比；`financial-report --latest` 快速獲取關鍵指標摘要
+- **`valuation-rank`** — 每日 PE/PB/PS 行業百分位排名
+- **`institution-rating --history` / `--industry-rank`** — 分析師評級變化歷史與行業覆蓋排名
+- **`news search` / `topic search`** — 關鍵詞搜尋資訊和社區話題
+- **`bank-cards`**、**`withdrawals`**、**`deposits`** — 銀行卡及出入金記錄查詢
+- **`portfolio short-margin`** — 各持倉融券保證金明細
+
 ## 2026-05-05
 
 ### CLI v0.19.2

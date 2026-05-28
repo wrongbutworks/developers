@@ -1,0 +1,293 @@
+---
+slug: financial-report
+title: 财务报告
+sidebar_position: 1
+language_tabs: false
+toc_footers: []
+includes: []
+search: true
+highlight_theme: ''
+headingLevel: 2
+---
+
+获取任意上市公司的利润表、资产负债表和现金流量表。
+
+<CliCommand>
+longbridge financial-report TSLA.US --kind IS
+longbridge financial-report AAPL.US
+</CliCommand>
+
+<SDKLinks module="fundamental" klass="FundamentalContext" method="financial_report" />
+
+
+## Parameters
+
+> **SDK 方法参数。**
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| symbol | string | 是 | 证券代码，例如 `AAPL.US` |
+| kind | string | 是 | 报表类型：`IncomeStatement`（利润表）、`BalanceSheet`（资产负债表）、`CashFlow`（现金流量表）、`All`（全部） |
+| period | string | 是 | 报告期：`Annual`（年报）、`SemiAnnual`（中报）、`Q1`/`Q2`/`Q3`/`ThreeQ`（季报）、`QuarterlyFull`（累计季报） |
+
+## Request Example
+
+<Tabs groupId="request-example">
+  <TabItem value="python" label="Python">
+
+```python
+from longbridge.openapi import FundamentalContext, Config, OAuthBuilder
+
+oauth = OAuthBuilder("your-client-id").build(lambda url: print("Visit:", url))
+config = Config.from_oauth(oauth)
+ctx = FundamentalContext(config)
+
+resp = ctx.financial_report("AAPL.US")
+print(resp)
+```
+
+  </TabItem>
+  <TabItem value="python-async" label="Python (async)">
+
+```python
+import asyncio
+from longbridge.openapi import AsyncFundamentalContext, Config, OAuthBuilder
+
+async def main() -> None:
+    oauth = await OAuthBuilder("your-client-id").build_async(lambda url: print("Visit:", url))
+    config = Config.from_oauth(oauth)
+    ctx = AsyncFundamentalContext.create(config)
+
+    resp = await ctx.financial_report("AAPL.US")
+    print(resp)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```javascript
+const { Config, FundamentalContext, OAuth } = require('longbridge')
+
+async function main() {
+  const oauth = await OAuth.build('your-client-id', (_, url) => {
+    console.log('Open this URL to authorize: ' + url)
+  })
+  const config = Config.fromOAuth(oauth)
+  const ctx = FundamentalContext.new(config)
+  const resp = await ctx.financial_report('AAPL.US')
+  console.log(resp)
+}
+main().catch(console.error)
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
+import com.longbridge.*;
+import com.longbridge.fundamental.*;
+
+class Main {
+    public static void main(String[] args) throws Exception {
+        try (OAuth oauth = new OAuthBuilder("your-client-id").build(url -> System.out.println("Open to authorize: " + url)).get();
+             Config config = Config.fromOAuth(oauth);
+             FundamentalContext ctx = FundamentalContext.create(config)) {
+            var resp = ctx.getFinancialReport("AAPL.US").get();
+            System.out.println(resp);
+        }
+    }
+}
+```
+
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+use std::sync::Arc;
+use longbridge::{oauth::OAuthBuilder, fundamental::FundamentalContext, Config};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let oauth = OAuthBuilder::new("your-client-id").build(|url| println!("Open: {url}")).await?;
+    let config = Arc::new(Config::from_oauth(oauth));
+    let ctx = FundamentalContext::new(config);
+    let resp = ctx.financial_report("AAPL.US").await?;
+    println!("{:?}", resp);
+    Ok(())
+}
+```
+
+  </TabItem>
+  <TabItem value="cpp" label="C++">
+
+```cpp
+#include <iostream>
+#include <longbridge.hpp>
+
+using namespace longbridge;
+using namespace longbridge::fundamental;
+
+int main() {
+    OAuthBuilder("your-client-id").build(
+        [](const std::string& url) { std::cout << "Open: " << url << std::endl; },
+        [](auto res) {
+            if (!res) return;
+            Config config = Config::from_oauth(*res);
+            FundamentalContext ctx = FundamentalContext::create(config);
+            ctx.financial_report("AAPL.US", [](auto resp) {
+                if (resp) std::cout << "OK" << std::endl;
+            });
+        });
+    std::cin.get();
+}
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/longbridge/openapi-go/config"
+	"github.com/longbridge/openapi-go/oauth"
+	"github.com/longbridge/openapi-go/fundamental"
+)
+
+func main() {
+	o := oauth.New("your-client-id").
+		OnOpenURL(func(url string) { fmt.Println("Open this URL to authorize:", url) })
+	if err := o.Build(context.Background()); err != nil {
+		log.Fatal(err)
+	}
+	conf, err := config.New(config.WithOAuthClient(o))
+	if err != nil {
+		log.Fatal(err)
+	}
+	c, err := fundamental.NewFromCfg(conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer c.Close()
+	resp, err := c.FinancialReport(context.Background(), "AAPL.US")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v\n", resp)
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## Response
+
+
+### Response Example
+
+```json
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    "list": {
+      "IS": {
+        "indicators": [
+          {
+            "title": "Income Statement",
+            "short_title": "IS",
+            "currency": "USD",
+            "has_yoy": true,
+            "entry": "IS",
+            "periods": [
+              "FY2025",
+              "FY2024"
+            ],
+            "accounts": [
+              {
+                "field": "EPS",
+                "name": "Earnings Per Share(USD)",
+                "percent": false,
+                "tip": "",
+                "values": [
+                  {
+                    "period": "FY 2025",
+                    "year": 2025,
+                    "fp_end": "1758945600",
+                    "value": "7.46",
+                    "ratio": "",
+                    "yoy": "0.227"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### Response Status
+
+| Status | Description | Schema |
+| ------ | ----------- | ------ |
+| 200    | 成功     | [FinancialReportsResponse](#FinancialReportsResponse) |
+| 400    | 请求错误 | None   |
+
+## Schemas
+
+### FinancialReportsResponse
+
+<a id="FinancialReportsResponse"></a>
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| list | object | true | 按报表类型分组的数据（key 为报表类型代码，如 `IS`、`BS`、`CF`） |
+
+### FinancialReportIndicator
+
+<a id="FinancialReportIndicator"></a>
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| title | string | false | 指标标题 |
+| short_title | string | false | 短标题 |
+| currency | string | false | 货币 |
+| has_yoy | boolean | false | 是否有同比数据 |
+| entry | string | false | 条目标识符 |
+| periods | string[] | false | 可用报告期列表 |
+| accounts | object[] | false | 财务科目列表，见 [FinancialAccount](#FinancialAccount) |
+
+### FinancialAccount
+
+<a id="FinancialAccount"></a>
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| field | string | true | 字段标识符 |
+| name | string | false | 字段显示名称 |
+| percent | boolean | false | 是否为百分比值 |
+| tip | string | false | 提示说明 |
+| values | object[] | false | 按报告期的历史数值，见 [FinancialValue](#FinancialValue) |
+
+### FinancialValue
+
+<a id="FinancialValue"></a>
+
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
+| period | string | true | 报告期标签（如 `FY 2024`） |
+| year | integer | false | 财政年度 |
+| fp_end | string | false | 报告期结束时间戳 |
+| value | string | false | 报告值 |
+| ratio | string | false | 比率值 |
+| yoy | string | false | 同比增长率 |

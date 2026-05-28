@@ -7,6 +7,31 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.22.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.0)
+
+- **新增 `shareholder --top`** — 前 20 大股东（机构、个人、内部人）多报告期持股对比；`--object-id <id>` 查看单一股东持仓历史及交易明细
+- **扩展 `short-positions`** — 新增港股支持（`.HK` 自动路由至港交所沽空持仓数据）
+- **新增 `short-trades`** — 每日沽空成交量（美股：FINRA/纳斯达克；港股：港交所披露数据）
+- **新增 `compare`** — 多股估值对比（PE/PB/PS/市值/收盘价），不传对比股票时服务端自动选取同行业标的
+- **新增 `top-movers`** — 价格波动超近 20 日标准差的异动股票，附关联新闻解读；支持 `--market`、`--sort time|change|hot` 筛选
+- **新增 `screener` 命令组** — 股票筛选工具：`strategies`（推荐/我的策略）、`search --strategy-id <id>` 或 `--filter key:min:max` 执行筛选、`indicators` 查看可用指标
+- **新增 `rank`** — 人气排行榜；不带 `--key` 列出所有分类，`--key <key>` 获取对应排行（如 `ib_hot_all-us`）
+- MCP 服务同步新增相同工具
+
+### [v0.21.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.21.0)
+
+- **新增 `business-segments`** — 按业务分部拆解营收，支持当期数据或历史趋势对比
+- **新增 `industry-rank`** — 按市场（US/HK/CN/SG）和指标对行业排名；Counter ID 可直接传给 `industry-peers`
+- **新增 `industry-peers`** — 行业子板块树形结构，展示各节点的股票数、当日涨跌和年初至今涨跌
+- **新增 `financial-report snapshot`** — AI 财报摘要，含超/低预期分析和同行即将发布财报日期
+- **新增 `institution-rating --views`** — 逐月展示机构评级分布变化趋势
+
+### [v0.20.3](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.20.3)
+
+- **Breaking：移除 `analyst-estimates` 命令** — 该命令已下线；EPS 和营收预测数据请改用 `consensus`
+- **修复：港股代码前导零** — `00700.HK`、`09988.HK` 等格式现在可正确解析为 `700.HK`、`9988.HK`；`operating` 命令说明更新，明确仅支持港股
+- **修复：`ipo detail`** — 自动从代码后缀识别市场（如 `SUJA.US` → 美股，`700.HK` → 港股），不再需要 `--market` 参数；找不到 IPO 数据时提示更友好；缴款截止日期改为 RFC 3339 格式
+
 ### [v0.20.2](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.20.2)
 
 - **修复：`institution-rating --history` 输出格式** — 改为表格布局，列顺序更合理；时间戳格式化为 `YYYY-MM-DD`；目标价保留 2 位小数；`evaluate_history` 仅展示最近 20 条记录
@@ -18,7 +43,6 @@ sidebar_icon: newspaper
 - **`financial-statement`** — 完整逐行财务报表（利润表/资产负债表/现金流量表），含层级结构与 YoY 对比；支持 `--kind IS/BS/CF/ALL` 和 `--report af/saf/qf/cumul`
 - **`financial-report --latest`** — 新增 `--latest` 参数，快速获取最新财报关键指标摘要（营收、净利润、EPS、ROE、总资产）
 - **`valuation-rank`** — 每日 PE/PB/PS 行业百分位排名，以 `排名/总数` 形式展示，支持自定义日期范围
-- **`analyst-estimates`** — 分析师 EPS 一致性预期（高/低/均值/中位数、覆盖数），含历史与未来各期数据
 - **`institution-rating --history` / `--industry-rank`** — 新增参数：`--history` 查看评级及目标价随时间的变化；`--industry-rank` 查看行业内所有股票的分析师覆盖排名
 - **`news search` / `topic search`** — 按关键词搜索资讯和社区话题
 - **`bank-cards`** — 查看账户绑定的银行卡列表
@@ -78,7 +102,7 @@ sidebar_icon: newspaper
 ### v0.16.3
 
 - **`auth` 子命令组** — `longbridge auth login`、`auth logout`、`auth status`；`auth status` 本地检查 Token 有效性、过期时间、账户信息和行情权限，无需网络
-- **`alert enable` / `alert disable`** — 切换价格提醒的启用状态，无需删除重建
+- **`alert enable` / `alert disable`** — 切换股价提醒的启用状态，无需删除重建
 - **修复：美股指数 symbol** — `.DJI.US`、`.VIX.US` 等美股指数 symbol 现已正确解析；美股指数需要前置点号（如 `.DJI.US`，而非 `DJI.US`）
 - **"你是否想查询…" 提示** — 当查询无返回数据时，CLI 会给出 symbol 格式建议：缺少市场后缀 → `TSLA.US` / `700.HK`；缺少前置点号 → `.DJI.US`
 
@@ -117,7 +141,7 @@ sidebar_icon: newspaper
 
 **新增：账户**
 
-- `alert` — 价格提醒（查看/添加/删除）
+- `alert` — 股价提醒（查看/添加/删除）
 - `profit-analysis` — 盈亏总览 + 逐只股票分析；`detail` 查看单只股票盈亏明细与交易流水；`by-market` 按市场筛选
 
 **增强**

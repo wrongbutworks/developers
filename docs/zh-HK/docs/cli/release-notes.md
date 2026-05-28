@@ -7,6 +7,31 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.22.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.0)
+
+- **新增 `shareholder --top`** — 前 20 大股東（機構、個人、內部人）多報告期持股對比；`--object-id <id>` 查看單一股東持倉歷史及交易明細
+- **擴展 `short-positions`** — 新增港股支持（`.HK` 自動路由至港交所沽空持倉數據）
+- **新增 `short-trades`** — 每日沽空成交量（美股：FINRA/納斯達克；港股：港交所披露數據）
+- **新增 `compare`** — 多股估值對比（PE/PB/PS/市值/收盤價），不傳對比股票時服務端自動選取同行業標的
+- **新增 `top-movers`** — 價格波動超近 20 日標準差的異動股票，附關聯新聞解讀；支持 `--market`、`--sort time|change|hot` 篩選
+- **新增 `screener` 命令組** — 股票篩選工具：`strategies`（推薦/我的策略）、`search --strategy-id <id>` 或 `--filter key:min:max` 執行篩選、`indicators` 查看可用指標
+- **新增 `rank`** — 人氣排行榜；不帶 `--key` 列出所有分類，`--key <key>` 獲取對應排行（如 `ib_hot_all-us`）
+- MCP 服務同步新增相同工具
+
+### [v0.21.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.21.0)
+
+- **新增 `business-segments`** — 按业务分部拆解营收，支持当期数据或历史趋势对比
+- **新增 `industry-rank`** — 按市场（US/HK/CN/SG）和指标对行业排名；Counter ID 可直接传给 `industry-peers`
+- **新增 `industry-peers`** — 行业子板块树形结构，展示各节点的股票数、当日涨跌和年初至今涨跌
+- **新增 `financial-report snapshot`** — AI 财报摘要，含超/低预期分析和同行即将发布财报日期
+- **新增 `institution-rating --views`** — 逐月展示机构评级分布变化趋势
+
+### [v0.20.3](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.20.3)
+
+- **Breaking：移除 `analyst-estimates` 指令** — 該指令已下線；EPS 及營收預測數據請改用 `consensus`
+- **修復：港股代碼前導零** — `00700.HK`、`09988.HK` 等格式現在可正確解析為 `700.HK`、`9988.HK`；`operating` 指令說明更新，明確僅支援港股
+- **修復：`ipo detail`** — 自動從代碼後綴識別市場（如 `SUJA.US` → 美股，`700.HK` → 港股），不再需要 `--market` 參數；找不到 IPO 資料時提示更友好；繳款截止日期改為 RFC 3339 格式
+
 ### [v0.20.2](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.20.2)
 
 - **修復：`institution-rating --history` 輸出格式** — 改為表格版面，欄位順序更合理；時間戳格式化為 `YYYY-MM-DD`；目標價保留 2 位小數；`evaluate_history` 僅顯示最近 20 條記錄
@@ -18,7 +43,6 @@ sidebar_icon: newspaper
 - **`financial-statement`** — 完整逐行財務報表（損益表/資產負債表/現金流量表），含層級結構與 YoY 對比；支持 `--kind IS/BS/CF/ALL` 和 `--report af/saf/qf/cumul`
 - **`financial-report --latest`** — 新增 `--latest` 參數，快速獲取最新財報關鍵指標摘要（營收、淨利潤、EPS、ROE、總資產）
 - **`valuation-rank`** — 每日 PE/PB/PS 行業百分位排名，以「排名/總數」形式展示，支持自訂日期範圍
-- **`analyst-estimates`** — 分析師 EPS 一致性預期（高/低/均值/中位數、覆蓋數），含歷史與未來各期數據
 - **`institution-rating --history` / `--industry-rank`** — 新增參數：`--history` 查看評級及目標價隨時間的變化；`--industry-rank` 查看行業內所有股票的分析師覆蓋排名
 - **`news search` / `topic search`** — 按關鍵詞搜尋資訊和社區話題
 - **`bank-cards`** — 查看賬戶綁定的銀行卡列表
@@ -117,7 +141,7 @@ sidebar_icon: newspaper
 
 **新增：帳戶**
 
-- `alert` — 價格提醒（查看/新增/刪除）
+- `alert` — 股價提醒（查看/新增/刪除）
 - `profit-analysis` — 盈虧總覽 + 逐隻股票分析；`detail` 查看單隻股票盈虧明細與交易流水；`by-market` 按市場篩選
 
 **增強**

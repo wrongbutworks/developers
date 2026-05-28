@@ -122,7 +122,8 @@ The security code uses the `ticker.region` format, `ticker` represents the code,
 - US Market: `region` is `US`, for example: `AAPL.US`.
 - HK Market: `region` is `HK`, for example: `700.HK`.
 - CN Market: `region` is `SH` for Shanghai Stock Exchange and `SZ` for Shenzhen Stock Exchange, for example: `399001.SZ`, `600519.SH`.
-- SG Market: `region` is `SG`, for example: `D05.SG`.
+
+> **Singapore Market (SG):** Real-time quotes for Singapore securities are not currently available via Longbridge Developers (API / CLI / MCP). Please use the [Longbridge App or desktop client](https://longbridge.com/download) to check SG market quotes.
 
 ## Access Method
 
@@ -144,11 +145,11 @@ Quote Protobuf protocol document [download link](https://github.com/longbridge/o
 
 All Quote APIs require OpenAPI quote permissions. These are **separate from App/PC/Web permissions** and must be activated independently.
 
-| Level | What's Included | How to Get |
-|---|---|---|
-| **Basic** | LV1 US/CN/SG real-time; HK BMP (~15 min delay, no push) | Included with OpenAPI activation |
-| **LV1 Real-time** (HK) | HK real-time quotes + WebSocket push support | Purchase "LV1 Real-time Quotes (OpenAPI)" via Quote Store |
-| **LV2 Subscription** | Level 2 order book (depth), HK broker queue | Purchase LV2 subscription via Quote Store |
-| **Overnight** (US) | US pre/post-market extended-hours data | Purchase LV1 card + set `LONGBRIDGE_ENABLE_OVERNIGHT=true` |
+| Level                  | What's Included                                      | How to Get                                                 |
+| ---------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| **Basic**              | LV1 US/CN real-time; HK BMP (~15 min delay, no push) | Included with OpenAPI activation                           |
+| **LV1 Real-time** (HK) | HK real-time quotes + WebSocket push support         | Purchase "LV1 Real-time Quotes (OpenAPI)" via Quote Store  |
+| **LV2 Subscription**   | Level 2 order book (depth), HK broker queue          | Purchase LV2 subscription via Quote Store                  |
+| **Overnight** (US)     | US pre/post-market extended-hours data               | Purchase LV1 card + set `LONGBRIDGE_ENABLE_OVERNIGHT=true` |
 
-Check your current permissions at [Developer Center](https://open.longbridge.com/account). Purchase quote cards via **Longbridge App → My → My Quotes → Quote Store**.
+Check your current permissions at [Developer Center](https://open.longbridge.com/dashboard). Purchase quote cards via **Longbridge App → My → My Quotes → Quote Store**.

@@ -1,6 +1,7 @@
 ﻿---
 slug: today_orders
-title: Get Today Order
+sidebar_position: 2
+title: Today Orders
 language_tabs: false
 toc_footers: []
 includes: []

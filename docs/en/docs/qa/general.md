@@ -11,7 +11,7 @@ That said, the paper account differs from the live environment in areas such as 
 
 ## Q2: How to open a paper account for debugging?
 
-Please visit [Development Center](https://open.longbridge.com/account/) to enable the paper account and obtain the corresponding App Key & Secret and Access Token.
+Please visit [Development Center](https://open.longbridge.com/dashboard/) to enable the paper account and obtain the corresponding App Key & Secret and Access Token.
 
 ## Q3: Are the trading permissions for simulation debugging the same as for real accounts?
 
@@ -23,7 +23,7 @@ Paper accounts and live accounts share the same App Key & Secret, but have diffe
 
 Market: Supports real-time market data for Hong Kong stocks, US stocks, and A-share markets. For advanced market data such as full US market data and Hong Kong Level2 data, they can be purchased through the online market store and accessed via OpenAPI.
 
-Trading: Supports trading of Hong Kong and US stocks, ETFs, and Hong Kong warrant trading. Short selling is supported for US stocks. OTC stocks, pre & post market trading, and options trading are not supported in paper accounts.
+Trading: Supports trading of Hong Kong and US stocks, ETFs, Hong Kong warrant trading, and US options. Short selling is supported for US stocks. OTC stocks and pre & post market trading are not supported in paper accounts.
 
 ## Q5: Interface call frequency limits
 

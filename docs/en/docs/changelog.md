@@ -6,6 +6,65 @@ sidebar_position: 7
 sidebar_icon: newspaper
 ---
 
+## 2026-05-22
+
+### CLI v0.22.0
+
+- **`shareholder --top`** — Top-20 major shareholders (institutions, individuals, insiders) with multi-period comparison; `--object-id <id>` for single shareholder holding history and trade details
+- **`short-positions`** — Extended to HK market (`.HK` auto-routes to HKEX short-position data), unified with US FINRA interface
+- **`short-trades`** — Daily short sale volume (US: FINRA/NASDAQ; HK: HKEX disclosure data)
+- **`compare`** — Multi-stock valuation comparison (PE/PB/PS/market-cap/close); server auto-selects peers when no comparison symbols given
+- **`top-movers`** — Stocks whose price exceeds the 20-day standard deviation, with correlated news; supports `--market`, `--sort time|change|hot`
+- **`screener` command group** — Stock screener: `strategies` (recommended/saved), `search --strategy-id <id>` or `--filter key:min:max`, `indicators` to list available filters
+- **`rank`** — Popularity leaderboard; list all categories without `--key`, or pass `--key <key>` (e.g. `ib_hot_all-us`)
+- MCP server updated with the same new tools
+
+### SDK v4.2.0
+
+- **FundamentalContext** — `shareholder_top`, `shareholder_detail`, `valuation_comparison`
+- **QuoteContext** — `short_positions` unified for US and HK; new `short_trades`
+- **MarketContext** — `top_movers`, `rank_categories`, `rank_list`
+- **New ScreenerContext** — `screener_recommend_strategies`, `screener_user_strategies`, `screener_strategy`, `screener_search`, `screener_indicators`
+- Languages: Rust / Python / Node.js / Java / C / C++ / Go
+
+## 2026-05-15
+
+### CLI v0.21.0
+
+- **`industry-rank`** — industry ranking by market (US/HK/CN/SG); pairs with `industry-peers` to explore the full competitive tree for any sector
+- **`industry-peers`** — sub-sector tree showing stock count, daily change, and YTD change per node
+- **`business-segments`** — revenue breakdown by business segment, current period or historical trend
+- **`financial-report snapshot`** — AI-generated earnings summary with beat/miss analysis vs consensus estimates
+- **`institution-rating --views`** — month-by-month buy/hold/sell distribution to track how analyst sentiment shifts over time
+- MCP server updated with the same new capabilities (133 tools total)
+
+## 2026-05-13
+
+### SDK v4.1.0
+
+- **7 new context types, 66 methods** — `FundamentalContext` (20 methods: financial reports, analyst ratings, dividends, EPS forecasts, consensus estimates, valuation), `MarketContext` (9 methods: market status, broker holdings, A/H premium, trade stats), `CalendarContext` (7 methods: earnings / dividends / splits / IPO calendar), `PortfolioContext` (5 methods: exchange rates, P&L analysis), `AlertContext` (4 methods: price alerts), `DCAContext` (12 methods: DCA plans lifecycle), `SharelistContext` (9 methods: community sharelists)
+- **QuoteContext** — 4 new methods: `short_positions`, `option_volume`, `option_volume_daily`, `update_pinned`
+- **ContentContext** — new `topic_detail` and topic reply methods
+- **Rust SDK** — `Config::header()` to inject custom HTTP/WebSocket headers
+- Parameters now use typed enums instead of raw integers; monetary fields use `Decimal` type
+
+### Docs
+
+- Sidebar restructured: **News & Contents** section consolidates News, Topics, and Sharelist; Quote **Watchlist** replaces Individual; **Appendix** replaces Socket Feed (collapsed by default)
+- **Fundamental** and **News & Contents** sections added to the docs overview
+
+## 2026-05-08
+
+### CLI v0.20.0
+
+- **`ipo` command group** — comprehensive IPO tools for HK (`subscriptions`, `wait-listing`, `listed`, `calendar`, `detail`, `orders`, `profit-loss`) and US markets (`us-subscriptions`, `us-wait-listing`, `us-listed`)
+- **`financial-statement`** — detailed hierarchical financial statements (IS/BS/CF) with YoY comparison; `financial-report --latest` for key indicator summary
+- **`valuation-rank`** — daily PE/PB/PS industry percentile rank over a date range
+- **`institution-rating --history` / `--industry-rank`** — analyst rating history and industry-wide analyst coverage ranking
+- **`news search` / `topic search`** — keyword search across news and community topics
+- **`bank-cards`**, **`withdrawals`**, **`deposits`** — account management commands for linked cards and transaction history
+- **`portfolio short-margin`** — short-selling margin deposit details per position
+
 ## 2026-05-05
 
 ### CLI v0.19.2
