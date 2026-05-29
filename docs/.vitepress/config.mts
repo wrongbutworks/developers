@@ -20,18 +20,20 @@ const MCP_TOOLS_DATA_PATH = resolve(__dirname, 'data/mcp-tools.json')
 const regionCfg = getRegionConfig()
 const regionSrcExclude = computeSrcExclude(docsRoot)
 
+// Google One Tap：proxy 由环境变量 PROXY 控制（CI 与本地 dev:canary/build:canary 脚本显式注入），
+// 默认 production；cn 区不注入（Google 不可用）。放在 head 配置里，dev 与 build 都生效。
+const oneTapProxy = process.env.PROXY === 'canary' ? 'canary' : 'production'
+const oneTapHead: Array<[string, Record<string, string>]> =
+  process.env.VITE_REGION === 'cn'
+    ? []
+    : [['script', { src: 'https://assets.wbrks.com/plugin/session/google-one-tap.es.js', proxy: oneTapProxy }]]
+
 const insertScript = (html: string) => {
   const $ = cheerio.load(html)
   $('head').prepend(
     `<script>window.__API_PROXY_URL__ = ${JSON.stringify(process.env.VITE_PORTAL_GATEWAY_BASE_URL)}</script>`,
     `<script defer˝ src="https://assets.lbctrl.com/uploads/b63bb77e-74b5-43d3-8bf4-d610be91c838/longport-internal.iife.js"></script>`
   )
-  // Google One Tap：CDN bundle，加载即自动触发；cn 区不注入（Google 不可用）。
-  // 不传 data-region：bundle 自行按 app-id cookie → region cookie → sg 兜底
-  //（本站为 .longbridge.com 一方域名，可读到 session cookie）。
-  if (process.env.VITE_REGION !== 'cn') {
-    $('head').append(`<script src="https://assets.wbrks.com/plugin/session/google-one-tap.es.js"></script>`)
-  }
   return $.html()
 }
 
@@ -165,6 +167,7 @@ export default defineConfig(
     gtag('config', 'G-P81Y8BDYYS');`],
     ['script', { defer: '', src: 'https://assets.lbkrs.com/pkg/sensorsdata/1.21.13.min.js' }],
     ['script', { async: '', src: 'https://at.alicdn.com/t/c/font_2621450_y740y72ffjq.js' }],
+    ...oneTapHead,
   ],
     themeConfig: {
       editLink: {
