@@ -26,7 +26,7 @@ const oneTapProxy = process.env.PROXY === 'canary' ? 'canary' : 'production'
 const oneTapHead: Array<[string, Record<string, string>]> =
   process.env.VITE_REGION === 'cn'
     ? []
-    : [['script', { src: 'https://assets.wbrks.com/plugin/session/google-one-tap.es.js', proxy: oneTapProxy }]]
+    : [['script', { src: 'https://assets.wbrks.com/plugin/session/google-one-tap.es.js', 'data-proxy': oneTapProxy }]]
 
 const insertScript = (html: string) => {
   const $ = cheerio.load(html)
