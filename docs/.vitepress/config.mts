@@ -21,12 +21,8 @@ const regionCfg = getRegionConfig()
 const regionSrcExclude = computeSrcExclude(docsRoot)
 
 // Google One Tap：proxy 由环境变量 PROXY 控制（CI 与本地 dev:canary/build:canary 脚本显式注入），
-// 默认 production；cn 区不注入（Google 不可用）。放在 head 配置里，dev 与 build 都生效。
+// 默认 production。放在 head 配置里，dev 与 build 都生效。
 const oneTapProxy = process.env.PROXY === 'canary' ? 'canary' : 'production'
-const oneTapHead: Array<[string, Record<string, string>]> =
-  process.env.VITE_REGION === 'cn'
-    ? []
-    : [['script', { src: 'https://assets.wbrks.com/plugin/session/google-one-tap.es.js', 'data-proxy': oneTapProxy }]]
 
 const insertScript = (html: string) => {
   const $ = cheerio.load(html)
@@ -167,7 +163,7 @@ export default defineConfig(
     gtag('config', 'G-P81Y8BDYYS');`],
     ['script', { defer: '', src: 'https://assets.lbkrs.com/pkg/sensorsdata/1.21.13.min.js' }],
     ['script', { async: '', src: 'https://at.alicdn.com/t/c/font_2621450_y740y72ffjq.js' }],
-    ...oneTapHead,
+    ['script', { src: 'https://assets.wbrks.com/plugin/session/google-one-tap.es.js', 'data-proxy': oneTapProxy }],
   ],
     themeConfig: {
       editLink: {
