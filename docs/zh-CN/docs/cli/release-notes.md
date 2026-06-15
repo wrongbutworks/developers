@@ -7,6 +7,21 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.22.4](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.4)
+
+- **`constituent` 支持 ETF** — ETF 标的现返回资产分布数据（持仓 / 地区 / 资产类别 / 行业四组表格）；指数标的行为完全不变
+- **美股 ETF 完整持仓（SEC N-PORT）** — 美股 ETF 默认从 SEC EDGAR N-PORT 文件获取完整持仓组合（权重、股数、市值，如 `IVV.US` 全部 500+ 只持仓）；SEC 数据不可用时回退到平台资产分布摘要
+
+### [v0.22.3](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.3)
+
+- **`quote` 新增美股隔夜时段数据** — `quote <SYMBOL> --format json` 现会输出 `overnight_quote`，与 `pre_market_quote`、`post_market_quote` 并列；此前隔夜字段始终为 `null`，会影响 AI 工作流中的盘后判断
+- **持仓类命令显示账户类型 banner** — `positions`、`fund-positions`、`assets`、`portfolio` 现会在表格前打印一行账户标识（`Live A/C (real account)` / `Demo A/C (simulated account)`），便于直接区分数据所属账户；`--format json` 输出保持不变
+
+### [v0.22.2](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.2)
+
+- **JSON 时间戳统一为 RFC 3339** — 时序与历史类命令（`kline`、`kline-history`、`trades`、`intraday`、`capital-flow`、`capital-dist`、`market-temp`、`topics`）及账户盈亏流水现输出 ISO 8601 / RFC 3339 日期时间，不再使用原始 Unix 时间戳
+- **`market-temp --history` 默认区间** — 省略 `--start` 时默认取结束日期前 30 天（此前默认为当天），单次 `--history` 即可返回整月数据
+
 ### [v0.22.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.0)
 
 - **新增 `shareholder --top`** — 前 20 大股东（机构、个人、内部人）多报告期持股对比；`--object-id <id>` 查看单一股东持仓历史及交易明细

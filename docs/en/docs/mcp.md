@@ -12,8 +12,8 @@ next: false
 Longbridge provides a hosted HTTP MCP (Model Context Protocol) service that lets you use Longbridge market data and account capabilities directly from AI coding assistants and chat tools — without managing API keys manually.
 
 :::tip MCP endpoint
-- Global: `https://openapi.longbridge.com/mcp`
-- Mainland China: `https://openapi.longbridge.cn/mcp` (faster access)
+- Global: `https://mcp.longbridge.com`
+- Mainland China: `https://mcp.longbridge.cn` (faster access)
 :::
 
 ## Available capabilities
@@ -49,7 +49,7 @@ Actual tool availability depends on your region, account level, and granted OAut
 Run the following command in your terminal:
 
 ```bash
-claude mcp add --transport http longbridge https://openapi.longbridge.com/mcp
+claude mcp add --transport http longbridge https://mcp.longbridge.com
 ```
 
 Then open the `claude` terminal interface, type `/mcp`, select `longbridge`, and choose **Authenticate** to complete the OAuth authorization flow.
@@ -60,7 +60,7 @@ Then open the `claude` terminal interface, type `/mcp`, select `longbridge`, and
 2. In the "Connect to a custom MCP" screen, fill in:
    - Name: `longbridge`
    - Type: **Streamable HTTP**
-   - URL: `https://openapi.longbridge.com/mcp`
+   - URL: `https://mcp.longbridge.com`
    - Leave all other fields empty
 3. Click **Save**
 4. Back in the MCP Servers list, click **Authenticate** on the `longbridge` entry to complete OAuth authorization
@@ -77,7 +77,7 @@ Add the following to your `settings.json` under the `context_servers` key (key n
 {
   "mcpServers": {
     "longbridge": {
-      "url": "https://openapi.longbridge.com/mcp"
+      "url": "https://mcp.longbridge.com"
     }
   }
 }
@@ -117,6 +117,10 @@ Longbridge MCP requires clients that fully implement **MCP OAuth 2.1**. Clients 
 Known issue: early versions of Cherry Studio do not support the full OAuth flow. Please upgrade to the latest release.
 
 If another client fails to connect, check its version and MCP support documentation.
+
+:::tip Client can't open the browser?
+If your client has incomplete OAuth support or cannot launch a browser, use an [Agent Auth Code](/agent-auth) instead: generate a one-time code at [https://open.longbridge.com/connect](https://open.longbridge.com/connect), connect to the dedicated endpoint `https://mcp.longbridge.com/agent`, and have the agent redeem it via the `authenticate` tool.
+:::
 
 ## Security recommendations
 

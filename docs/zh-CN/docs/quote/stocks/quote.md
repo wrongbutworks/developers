@@ -5,7 +5,7 @@ slug: /quote/pull/quote
 sidebar_position: 2
 ---
 
-该接口用于获取标的的实时行情 (支持所有类型标的）。
+该接口用于获取标的的实时行情 (支持所有类型标的）。如需查看这些实时数据流汇聚而成的实时指数、板块热力图与宏观市场概览，可参考 ["全球市场"](https://longbridge.com/markets)。
 
 <QuotePermission command="quote" />
 
@@ -268,7 +268,7 @@ func main() {
 | ∟∟ high             | string   | 最高价                                                                          |
 | ∟∟ low              | string   | 最低价                                                                          |
 | ∟∟ prev_close       | string   | 上一个交易阶段的收盘价                                                          |
-| ∟ overnight_quote   | object   | 美股夜盘交易行情<br/><br/>注意：需在 App 行情商店购买「LV1 实时行情 (OpenAPI)」行情卡并开启 `enable_overnight` 参数，否则会返回 null |
+| ∟ overnight_quote   | object   | 美股夜盘交易行情<br/><br/>注意：需开启 `enable_overnight` 参数获取，否则返回 null（夜盘行情免费，仅支持美股） |
 | ∟∟ last_done        | string   | 最新价                                                                          |
 | ∟∟ timestamp        | int64    | 最新成交的时间戳                                                                |
 | ∟∟ volume           | int64    | 成交量                                                                          |

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
+import { ref, computed, onMounted, onUnmounted, defineAsyncComponent, watch } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import { useI18n } from 'vue-i18n'
 import endsWith from 'lodash/endsWith'
@@ -97,6 +97,7 @@ const avatarCloseTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 
 const avatarMenuItems = computed(() => [
   { title: 'Dashboard', href: '/dashboard' },
+  { title: 'Connect AI', href: '/connect' },
   { title: 'Log out', href: '/log-out' },
 ])
 
@@ -123,31 +124,109 @@ function openSearch() {
   )
 }
 
+// Helora 事件订阅的清理函数集（boot 之后由 on() 返回）
+const heloraDisposers: Array<() => void> = []
+let heloraReady = false
+
+function syncHeloraTheme(dark: boolean) {
+  if (!heloraReady) return
+  console.log(7777777, dark)
+  window.Helora?.setTheme?.(dark ? 'dark' : 'light')
+}
+
+function syncHeloraLocale(locale: string) {
+  if (!heloraReady) return
+  // Helora 暂未暴露 setLocale，重新 boot 即可让其拉新语种文案
+  window.Helora?.boot?.({
+    proxy: !endsWith(location.hostname, '.xyz') && !import.meta.env.DEV ? 'prod' : 'staging',
+    guest: true,
+    configPlatform: 'web',
+    configKey: 'helora-agent-openapi',
+    source: 'web_openapi',
+    locale,
+    theme: isDark.value ? 'dark' : 'light',
+    headerActions: [
+      {
+        id: 'issue',
+        label: t('helora.submitIssue'),
+        icon: 'alert-circle',
+        intent: 'event',
+      },
+    ],
+  })
+}
+
 onMounted(() => {
   initLoginState()
   document.addEventListener('click', onAvatarClickOutside)
 
-  if (!isCnDomain) {
-    const swSrc = 'https://assets.lbkrs.com/h5hub/support-widget/support-widget-1.0.7.iife.js'
-    const isProd = !endsWith(location.hostname, '.xyz') && !import.meta.env.DEV
-    window.SupportWidgetConfig = {
-      isLoggedIn: function () {
-        return isLogin.value
-      },
-      loginUrl: createLoginRedirectPath({ sw_open: '1' }),
+  // Helora 客服（接替旧的 support-widget）
+  // dev/staging 用 .dev 包 + proxy=staging；线上用 release 包 + proxy=prod
+  const isProd = !endsWith(location.hostname, '.xyz') && !import.meta.env.DEV
+  const heloraSrc = 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-1.0.0.dev.iife.js'
+
+  const bootHelora = () => {
+    const Helora = window.Helora
+    if (!Helora) return
+    Helora.boot({
       proxy: isProd ? 'prod' : 'staging',
-    }
-    if (!document.querySelector(`script[src="${swSrc}"]`)) {
-      const script = document.createElement('script')
-      script.src = swSrc
-      script.async = true
-      document.head.appendChild(script)
-    }
+      guest: true,
+      configPlatform: 'web',
+      configKey: 'helora-agent-openapi',
+      source: 'web_openapi',
+      locale: currentLocale.value,
+      theme: isDark.value ? 'dark' : 'light',
+      headerActions: [
+        {
+          id: 'issue',
+          label: t('helora.submitIssue'),
+          icon: 'alert-circle',
+          intent: 'event',
+        },
+      ],
+    })
+    heloraReady = true
+
+    // 订阅 header action（提交问题按钮）—— headerActions 里 intent: 'event' 会通过事件回调通知宿主
+    const offAction = Helora.on?.('headerAction', (payload: { id?: string }) => {
+      if (payload?.id === 'issue') {
+        window.open('https://github.com/longbridge/openapi/issues/new', '_blank', 'noopener,noreferrer')
+      }
+    })
+    if (typeof offAction === 'function') heloraDisposers.push(offAction)
   }
+
+  if (!document.querySelector(`script[src="${heloraSrc}"]`)) {
+    const script = document.createElement('script')
+    script.src = heloraSrc
+    script.async = true
+    script.onload = bootHelora
+    document.head.appendChild(script)
+  } else if (window.Helora) {
+    bootHelora()
+  }
+
+  // 主题切换 → 通知 Helora
+  watch(isDark, (dark) => syncHeloraTheme(dark))
+
+  // 语言切换 → 通知 Helora
+  // 当前 switchLocale 走 location.href（整页刷新），下次 mount 直接以新 locale boot；
+  // 但 SPA 内若有路由级切换（不刷新），仍能命中这里
+  watch(currentLocale, (locale, prev) => {
+    if (locale && locale !== prev) syncHeloraLocale(locale)
+  })
 })
 onUnmounted(() => {
   document.removeEventListener('click', onAvatarClickOutside)
   if (avatarCloseTimer.value) clearTimeout(avatarCloseTimer.value)
+  heloraDisposers.splice(0).forEach((dispose) => {
+    try {
+      dispose()
+    } catch {
+      // ignore
+    }
+  })
+  heloraReady = false
 })
 </script>
 

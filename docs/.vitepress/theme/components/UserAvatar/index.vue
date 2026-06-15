@@ -4,11 +4,9 @@ import UserAvatarIcon from './UserAvatarIcon.vue'
 import Dropdown from './UserAvatarDropdown.vue'
 import LoginButton from './LoginButton.vue'
 import { localePath } from '../../utils/i18n'
-import { createLoginRedirectPath } from '../../utils/navigate'
 import { useI18n } from 'vue-i18n'
 import { useAvatar } from './uesAvatar'
 import { isLoginState, initLoginState } from '../../composables/useLoginState'
-import endsWith from 'lodash/endsWith'
 
 const { t } = useI18n()
 
@@ -20,24 +18,6 @@ const isLogin = isLoginState
 
 onMounted(() => {
   initLoginState()
-
-  const isProd = !endsWith(location.hostname, '.xyz') && !import.meta.env.DEV
-  const loginUrl = createLoginRedirectPath({
-    sw_open: '1',
-  })
-  window.HeloraConfig = {
-    proxy: 'staging',
-    source: 'web_openapi',
-    configPlatform: 'web',
-    configKey: 'helora',
-    agentId: 'openapi-agent-id',
-    agentOnly: true
-  }
-
-  const script = document.createElement('script')
-  script.src = 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-0.1.0.dev.iife.js'
-  script.async = true
-  document.head.appendChild(script)
 })
 
 const { avatar } = useAvatar()

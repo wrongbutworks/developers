@@ -12,8 +12,8 @@ next: false
 Longbridge 提供托管的 HTTP MCP（Model Context Protocol）服务，让你在 AI 编程助手或对话工具中直接使用 Longbridge 的行情与账户能力，无需手动管理 API 密钥。
 
 :::tip MCP 服务地址
-- 全球：`https://openapi.longbridge.com/mcp`
-- 中国大陆：`https://openapi.longbridge.cn/mcp`（访问更快）
+- 全球：`https://mcp.longbridge.com`
+- 中国大陆：`https://mcp.longbridge.cn`（访问更快）
 :::
 
 ## 可用能力
@@ -49,7 +49,7 @@ Longbridge MCP 暴露 100+ 工具，覆盖六大能力域，客户端连接后�
 在终端运行以下命令：
 
 ```bash
-claude mcp add --transport http longbridge https://openapi.longbridge.com/mcp
+claude mcp add --transport http longbridge https://mcp.longbridge.com
 ```
 
 然后进入 `claude` 终端界面，输入 `/mcp`，选择 `longbridge`，再选择 **Authenticate** 跟随流程完成 OAuth 授权。
@@ -60,7 +60,7 @@ claude mcp add --transport http longbridge https://openapi.longbridge.com/mcp
 2. 在 "Connect to a custom MCP" 界面填写：
    - Name：`longbridge`
    - 类型：**Streamable HTTP**
-   - URL：`https://openapi.longbridge.com/mcp`
+   - URL：`https://mcp.longbridge.com`
    - 其他字段留空
 3. 点击 **Save**
 4. 回到 MCP Servers 列表，点击 `longbridge` 条目上的 **Authenticate** 完成 OAuth 授权
@@ -77,7 +77,7 @@ Settings → MCP Servers → 添加 Remote MCP Server，填入上方地址即可
 {
   "mcpServers": {
     "longbridge": {
-      "url": "https://openapi.longbridge.com/mcp"
+      "url": "https://mcp.longbridge.com"
     }
   }
 }
@@ -117,6 +117,10 @@ Longbridge MCP 依赖 **MCP OAuth 2.1** 标准。若客户端未完整实现该�
 已知问题：Cherry Studio 早期版本不支持完整 OAuth 流程，请升级至最新版本。
 
 如遇其他客户端连接失败，请确认客户端版本并查阅其 MCP 支持文档。
+
+:::tip 客户端无法打开浏览器？
+若客户端的 OAuth 实现不完整或无法拉起浏览器，可改用[授权码授权](/zh-CN/docs/agent-auth)：在 [https://open.longbridge.com/connect](https://open.longbridge.com/connect) 生成一次性授权码，连接专用端点 `https://mcp.longbridge.com/agent`，让 Agent 通过 `authenticate` 工具兑换。
+:::
 
 ## 安全建议
 

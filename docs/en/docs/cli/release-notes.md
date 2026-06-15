@@ -7,6 +7,21 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.22.4](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.4)
+
+- **`constituent` now supports ETFs** — ETF symbols return an asset-allocation breakdown (holdings / regional / asset-class / industry tables); index symbols behave exactly as before
+- **Full US ETF holdings from SEC N-PORT** — for US ETFs, `constituent` fetches the complete portfolio from SEC EDGAR N-PORT filings by default (weight, shares, market value — e.g. all 500+ holdings of `IVV.US`); falls back to the platform's asset-allocation summary when SEC data is unavailable
+
+### [v0.22.3](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.3)
+
+- **`quote` now includes the US overnight session** — `quote <SYMBOL> --format json` now populates `overnight_quote` alongside `pre_market_quote` and `post_market_quote`; previously the overnight field was always `null`, skewing after-close analysis in AI workflows
+- **Account-type banner on holdings commands** — `positions`, `fund-positions`, `assets`, and `portfolio` now print a one-line banner (`Live A/C (real account)` / `Demo A/C (simulated account)`) before the table, so it's clear which account the data belongs to; `--format json` output is unchanged
+
+### [v0.22.2](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.2)
+
+- **JSON timestamps now RFC 3339** — time-series and history commands (`kline`, `kline-history`, `trades`, `intraday`, `capital-flow`, `capital-dist`, `market-temp`, `topics`) and account P&L flows now output ISO 8601 / RFC 3339 datetimes instead of raw Unix epochs
+- **`market-temp --history` default range** — omitting `--start` now defaults to 30 days before the end date instead of today, so a single `--history` call returns a full month of data
+
 ### [v0.22.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.22.0)
 
 - **New `shareholder --top`** — Top-20 major shareholders (institutions, individuals, insiders) with multi-period comparison; `--object-id <id>` for single shareholder holding history and trade details
