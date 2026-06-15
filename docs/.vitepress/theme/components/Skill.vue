@@ -48,6 +48,10 @@ const LOCALE = {
       desc: 'Each Skill is a packaged set of tools, callable by any supported AI client. Click any card to see install instructions and details.',
       marketplace: 'Available on Claude Code Plugin Marketplace',
       pluginDesc: 'Copy the commands and run them in Claude Code.',
+      codexMarketplace: 'Available on Codex Plugin Marketplace',
+      codexPluginDesc: 'Copy the commands and run them in your terminal.',
+      pluginTabCodex: 'Codex',
+      pluginTabClaudeCode: 'Claude Code',
       tools: 'tools',
       manualLabel: 'Manual',
       viewSkill: 'View Full Skill',
@@ -154,6 +158,10 @@ const LOCALE = {
       desc: '每个 Skill 都是一套打包的工具集，可被任何受支持的 AI 客户端调用。点击任意卡片查看安装说明和详情。',
       marketplace: '已上架 Claude Code 插件市场',
       pluginDesc: '复制命令，在 Claude Code 中运行即可。',
+      codexMarketplace: '已上架 Codex 插件市场',
+      codexPluginDesc: '复制命令，在终端中执行即可。',
+      pluginTabCodex: 'Codex',
+      pluginTabClaudeCode: 'Claude Code',
       tools: '个工具',
       manualLabel: '手动安装',
       viewSkill: '查看完整技能',
@@ -385,6 +393,10 @@ const LOCALE = {
       desc: '每個 Skill 都是一套打包的工具集，可被任何受支援的 AI 客戶端調用。點擊任意卡片查看安裝說明和詳情。',
       marketplace: '已上架 Claude Code 外掛市場',
       pluginDesc: '複製命令，在 Claude Code 中運行即可。',
+      codexMarketplace: '已上架 Codex 外掛市場',
+      codexPluginDesc: '複製命令，在終端機中執行即可。',
+      pluginTabCodex: 'Codex',
+      pluginTabClaudeCode: 'Claude Code',
       tools: '個工具',
       manualLabel: '手動安裝',
       viewSkill: '查看完整技能',
@@ -1138,6 +1150,7 @@ const CATALOG_CATS = computed(() =>
 )
 
 const activeCatalogCat = ref('all')
+const activePluginTab = ref('codex')
 const catalogQuery = ref('')
 const catalogExpanded = ref(false)
 const openCatalogSkill = ref<CatalogSkill | null>(null)
@@ -1549,17 +1562,33 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
               </div>
               <div>
                 <div class="sc-plugin-title">
-                  {{ content.catalog.marketplace }}
+                  {{ activePluginTab === 'codex' ? content.catalog.codexMarketplace : content.catalog.marketplace }}
                   <span class="sc-plugin-badge">PLUGIN</span>
                 </div>
-                <div class="sc-plugin-desc">{{ content.catalog.pluginDesc }}</div>
+                <div class="sc-plugin-desc">
+                  {{ activePluginTab === 'codex' ? content.catalog.codexPluginDesc : content.catalog.pluginDesc }}
+                </div>
               </div>
             </div>
             <div class="sc-plugin-right">
+              <div class="sc-plugin-tabs">
+                <button
+                  :class="['sc-plugin-tab', activePluginTab === 'codex' && 'sc-plugin-tab--active']"
+                  @click="activePluginTab = 'codex'">{{ content.catalog.pluginTabCodex }}</button>
+                <button
+                  :class="['sc-plugin-tab', activePluginTab === 'claude' && 'sc-plugin-tab--active']"
+                  @click="activePluginTab = 'claude'">{{ content.catalog.pluginTabClaudeCode }}</button>
+              </div>
               <div class="sc-plugin-cmd-block">
                 <div class="sc-plugin-cmd-lines">
-                  <code><span class="sc-plugin-kw">/plugin</span> marketplace add longbridge/skills</code>
-                  <code><span class="sc-plugin-kw">/plugin</span> install longbridge@longbridge-skills</code>
+                  <template v-if="activePluginTab === 'codex'">
+                    <code><span class="sc-plugin-kw">codex plugin</span> marketplace add longbridge/skills</code>
+                    <code><span class="sc-plugin-kw">codex plugin</span> add longbridge@longbridge-skills</code>
+                  </template>
+                  <template v-else>
+                    <code><span class="sc-plugin-kw">/plugin</span> marketplace add longbridge/skills</code>
+                    <code><span class="sc-plugin-kw">/plugin</span> install longbridge@longbridge-skills</code>
+                  </template>
                 </div>
               </div>
             </div>
@@ -3510,6 +3539,28 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
   .sc-plugin-right {
     width: 100%;
   }
+}
+.sc-plugin-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.sc-plugin-tab {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--lb-border);
+  background: transparent;
+  color: var(--lb-fg-2);
+  cursor: pointer;
+  line-height: 1.5;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.sc-plugin-tab--active {
+  background: rgb(245, 158, 11);
+  border-color: rgb(245, 158, 11);
+  color: #fff;
 }
 .sc-plugin-cmd-block {
   position: relative;
