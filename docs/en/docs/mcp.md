@@ -12,22 +12,23 @@ next: false
 Longbridge provides a hosted HTTP MCP (Model Context Protocol) service that lets you use Longbridge market data and account capabilities directly from AI coding assistants and chat tools — without managing API keys manually.
 
 :::tip MCP endpoint
+
 - Global: `https://mcp.longbridge.com`
 - Mainland China: `https://mcp.longbridge.cn` (faster access)
-:::
+  :::
 
 ## Available capabilities
 
 Longbridge MCP exposes 100+ tools across six capability areas. Your client discovers them automatically on connect — no manual configuration.
 
-| Capability | Coverage |
-| --- | --- |
-| **Real-time market data** | Quotes, candlesticks, depth, broker queues, trades, intraday capital flow |
-| **Fundamentals & research** | Company profiles, dividends, valuations, executive holdings, A/H premium |
-| **Derivatives** | Option chains, warrant filters, issuers, warrant quotes |
-| **Account & portfolio** | Balances, positions, cash flow, watchlists and groups |
-| **Trading** | Place / modify / cancel orders, estimate max purchase quantity |
-| **Automation** | Price alerts, scheduled DCA (dollar-cost averaging) plans |
+| Capability                  | Coverage                                                                  |
+| --------------------------- | ------------------------------------------------------------------------- |
+| **Real-time market data**   | Quotes, candlesticks, depth, broker queues, trades, intraday capital flow |
+| **Fundamentals & research** | Company profiles, dividends, valuations, executive holdings, A/H premium  |
+| **Derivatives**             | Option chains, warrant filters, issuers, warrant quotes                   |
+| **Account & portfolio**     | Balances, positions, cash flow, watchlists and groups                     |
+| **Trading**                 | Place / modify / cancel orders, estimate max purchase quantity            |
+| **Automation**              | Price alerts, scheduled DCA (dollar-cost averaging) plans                 |
 
 Actual tool availability depends on your region, account level, and granted OAuth scopes.
 
@@ -44,6 +45,27 @@ Actual tool availability depends on your region, account level, and granted OAut
 
 > Configuration format may vary across client versions. Treat your client's official MCP documentation as the source of truth. The core parameter you need is the server URL below.
 
+### ChatGPT
+
+You need to enable [ChatGPT Developer Mode](https://developers.openai.com/api/docs/guides/developer-mode) before you can add Longbridge MCP.
+
+In ChatGPT, go to [Settings → Apps](https://chatgpt.com/#settings/Connectors) → [Advanced settings → Developer mode](https://chatgpt.com/#settings/Connectors/Advanced) and turn on **Developer mode**.
+
+![](https://assets.lbctrl.com/uploads/02e8a24a-be0b-49b2-a4eb-9952bc7a4f9b/enable-chatgpt-dev.png)
+
+Then click **Back** to return to the Apps list, where you can click the **Create app** button to add a new app — this is where you add Longbridge MCP.
+
+Fill in the form:
+
+- Name：`Longbridge`
+- Description：`Investment market insights`
+- Connection (Server URL):`https://mcp.longbridge.com`
+- Authentication：OAuth
+
+Full walkthrough video:
+
+<video src="https://assets.lbctrl.com/uploads/a9e06030-99e7-4f1b-90a6-d5efd5bb1fe8/longbridge-mcp-for-chatgpt.mp4" controls />
+
 ### Claude Code
 
 Run the following command in your terminal:
@@ -55,6 +77,16 @@ claude mcp add --transport http longbridge https://mcp.longbridge.com
 Then open the `claude` terminal interface, type `/mcp`, select `longbridge`, and choose **Authenticate** to complete the OAuth authorization flow.
 
 ### Codex
+
+Run the following command in your terminal:
+
+```bash
+codex mcp add longbridge --url https://mcp.longbridge.com
+```
+
+Then follow the OAuth authorization flow in Codex when prompted.
+
+#### Codex Desktop
 
 1. Click **Settings** (bottom right) → **MCP Servers** → **Add Server**
 2. In the "Connect to a custom MCP" screen, fill in:
