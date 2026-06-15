@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onUnmounted, defineAsyncComponent, watch } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import { useI18n } from 'vue-i18n'
-import endsWith from 'lodash/endsWith'
 import { useLocalePath, getBasenameLocale } from '../utils/i18n'
 import { createLoginRedirectPath } from '../utils/navigate'
 import { isLoginState, initLoginState } from '../composables/useLoginState'
@@ -124,96 +123,78 @@ function openSearch() {
   )
 }
 
-// Helora 事件订阅的清理函数集（boot 之后由 on() 返回）
+// Helora 客服：SDK 由 vitepress head 配置静态注入到所有页面（见 config.mts），
+// 这里只负责等 window.Helora 就绪 → boot → 订阅事件 → 主题/语言同步
 const heloraDisposers: Array<() => void> = []
-let heloraReady = false
+let heloraBooted = false
 
-function syncHeloraTheme(dark: boolean) {
-  if (!heloraReady) return
-  console.log(7777777, dark)
-  window.Helora?.setTheme?.(dark ? 'dark' : 'light')
-}
-
-function syncHeloraLocale(locale: string) {
-  if (!heloraReady) return
-  // Helora 暂未暴露 setLocale，重新 boot 即可让其拉新语种文案
-  window.Helora?.boot?.({
-    proxy: !endsWith(location.hostname, '.xyz') && !import.meta.env.DEV ? 'prod' : 'staging',
+function buildHeloraBootConfig(locale: string) {
+  // Helora SDK 用 data-helora-proxy 属性记录构建时的 proxy 选择，避免在客户端再做 host 判断
+  const tag = document.querySelector<HTMLScriptElement>('script[data-helora-proxy]')
+  const proxy = (tag?.dataset.heloraProxy as 'prod' | 'staging') || 'staging'
+  return {
+    proxy,
     guest: true,
-    configPlatform: 'web',
+    configPlatform: 'web' as const,
     configKey: 'helora-agent-openapi',
     source: 'web_openapi',
     locale,
-    theme: isDark.value ? 'dark' : 'light',
+    theme: (isDark.value ? 'dark' : 'light') as 'dark' | 'light',
     headerActions: [
       {
         id: 'issue',
         label: t('helora.submitIssue'),
         icon: 'alert-circle',
-        intent: 'event',
+        intent: 'event' as const,
       },
     ],
+  }
+}
+
+function bootHelora() {
+  const Helora = window.Helora
+  if (!Helora) return false
+  Helora.boot(buildHeloraBootConfig(currentLocale.value))
+  heloraBooted = true
+
+  // 订阅 header action（提交问题按钮）
+  const offAction = Helora.on?.('headerAction', (payload: { id?: string }) => {
+    if (payload?.id === 'issue') {
+      window.open('https://github.com/longbridge/openapi/issues/new', '_blank', 'noopener,noreferrer')
+    }
   })
+  if (typeof offAction === 'function') heloraDisposers.push(offAction)
+  return true
+}
+
+function waitForHeloraAndBoot() {
+  if (bootHelora()) return
+  // SDK 是 async script，可能在 onMounted 时还没加载完。轮询 + 兜底超时
+  let tries = 0
+  const timer = window.setInterval(() => {
+    tries += 1
+    if (bootHelora() || tries > 100) window.clearInterval(timer)
+  }, 100)
+  heloraDisposers.push(() => window.clearInterval(timer))
 }
 
 onMounted(() => {
   initLoginState()
   document.addEventListener('click', onAvatarClickOutside)
 
-  // Helora 客服（接替旧的 support-widget）
-  // dev/staging 用 .dev 包 + proxy=staging；线上用 release 包 + proxy=prod
-  const isProd = !endsWith(location.hostname, '.xyz') && !import.meta.env.DEV
-  const heloraSrc = 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-1.0.0.dev.iife.js'
-
-  const bootHelora = () => {
-    const Helora = window.Helora
-    if (!Helora) return
-    Helora.boot({
-      proxy: isProd ? 'prod' : 'staging',
-      guest: true,
-      configPlatform: 'web',
-      configKey: 'helora-agent-openapi',
-      source: 'web_openapi',
-      locale: currentLocale.value,
-      theme: isDark.value ? 'dark' : 'light',
-      headerActions: [
-        {
-          id: 'issue',
-          label: t('helora.submitIssue'),
-          icon: 'alert-circle',
-          intent: 'event',
-        },
-      ],
-    })
-    heloraReady = true
-
-    // 订阅 header action（提交问题按钮）—— headerActions 里 intent: 'event' 会通过事件回调通知宿主
-    const offAction = Helora.on?.('headerAction', (payload: { id?: string }) => {
-      if (payload?.id === 'issue') {
-        window.open('https://github.com/longbridge/openapi/issues/new', '_blank', 'noopener,noreferrer')
-      }
-    })
-    if (typeof offAction === 'function') heloraDisposers.push(offAction)
-  }
-
-  if (!document.querySelector(`script[src="${heloraSrc}"]`)) {
-    const script = document.createElement('script')
-    script.src = heloraSrc
-    script.async = true
-    script.onload = bootHelora
-    document.head.appendChild(script)
-  } else if (window.Helora) {
-    bootHelora()
-  }
+  waitForHeloraAndBoot()
 
   // 主题切换 → 通知 Helora
-  watch(isDark, (dark) => syncHeloraTheme(dark))
+  watch(isDark, (dark) => {
+    if (!heloraBooted) return
+    window.Helora?.setTheme?.(dark ? 'dark' : 'light')
+  })
 
-  // 语言切换 → 通知 Helora
-  // 当前 switchLocale 走 location.href（整页刷新），下次 mount 直接以新 locale boot；
-  // 但 SPA 内若有路由级切换（不刷新），仍能命中这里
+  // 语言切换 → 通知 Helora（当前 switchLocale 走 location.href 整页刷新，
+  // 下次 mount 会直接以新 locale boot；这里兜底 SPA 路由场景）
   watch(currentLocale, (locale, prev) => {
-    if (locale && locale !== prev) syncHeloraLocale(locale)
+    if (!heloraBooted || !locale || locale === prev) return
+    window.Helora?.boot?.(buildHeloraBootConfig(locale))
   })
 })
 onUnmounted(() => {
@@ -226,7 +207,7 @@ onUnmounted(() => {
       // ignore
     }
   })
-  heloraReady = false
+  heloraBooted = false
 })
 </script>
 

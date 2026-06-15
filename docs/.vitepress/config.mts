@@ -24,6 +24,12 @@ const regionSrcExclude = computeSrcExclude(docsRoot)
 // 默认 production。放在 head 配置里，dev 与 build 都生效。
 const oneTapProxy = process.env.PROXY === 'canary' ? 'canary' : 'production'
 
+// Helora 客服 SDK：canary / 本地 dev / 非 release 走 .dev 包；只有 build:release 走 release 包
+const isReleaseBuild = process.env.PROXY !== 'canary' && process.env.NODE_ENV === 'production'
+const heloraScriptSrc = isReleaseBuild
+  ? 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-1.0.0.iife.js'
+  : 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-1.0.0.dev.iife.js'
+
 const insertScript = (html: string) => {
   const $ = cheerio.load(html)
   $('head').prepend(
@@ -177,6 +183,7 @@ export default defineConfig(
     ['script', { defer: '', src: 'https://assets.lbkrs.com/pkg/sensorsdata/1.21.13.min.js' }],
     ['script', { async: '', src: 'https://at.alicdn.com/t/c/font_2621450_y740y72ffjq.js' }],
     ['script', { src: 'https://assets.wbrks.com/plugin/session/google-one-tap.es.js', 'data-proxy': oneTapProxy }],
+    ['script', { async: '', src: heloraScriptSrc, 'data-helora-proxy': isReleaseBuild ? 'prod' : 'staging' }],
   ],
     themeConfig: {
       editLink: {
