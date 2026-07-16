@@ -9,15 +9,15 @@ import { execSync } from 'node:child_process'
 import { localesConfig } from './config/locales'
 import { withMermaid } from 'vitepress-plugin-mermaid'
 import { rewriteMarkdownPath } from './utils'
-import { getRegionConfig, computeSrcExclude } from './region-utils'
+import { getRegionConfig, computeSrcExclude, buildRegionUrlReplacements } from './region-utils'
 import * as cheerio from 'cheerio'
 import yaml from 'js-yaml'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const docsRoot = resolve(__dirname, '..')
-const MCP_TOOLS_URL = 'https://mcp.longbridge.com/mcp/tools.json'
 const MCP_TOOLS_DATA_PATH = resolve(__dirname, 'data/mcp-tools.json')
 const regionCfg = getRegionConfig()
+const MCP_TOOLS_URL = `${regionCfg?.mcpHostname || 'https://mcp.longbridge.com'}/mcp/tools.json`
 const regionSrcExclude = computeSrcExclude(docsRoot)
 
 // Google One Tap：proxy 由环境变量 PROXY 控制（CI 与本地 dev:canary/build:canary 脚本显式注入），
@@ -26,9 +26,7 @@ const oneTapProxy = process.env.PROXY === 'canary' ? 'canary' : 'production'
 
 // Helora 客服 SDK：canary / 本地 dev / 非 release 走 .dev 包；只有 build:release 走 release 包
 const isReleaseBuild = process.env.PROXY !== 'canary' && process.env.NODE_ENV === 'production'
-const heloraScriptSrc = isReleaseBuild
-  ? 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-1.0.0.iife.js'
-  : 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-1.0.0.dev.iife.js'
+const heloraScriptSrc = 'https://assets.lbkrs.com/h5hub/helora-embed/helora-embed-1.0.1.iife.js'
 
 const insertScript = (html: string) => {
   const $ = cheerio.load(html)
@@ -55,12 +53,9 @@ export default defineConfig(
     markdown: markdownConfig,
     transformHtml(code) {
       let html = insertScript(code)
-      // Region URL rewriting: replace global hostnames (site + API) with region hostnames in final HTML
-      if (regionCfg?.siteHostname && regionCfg.siteHostname !== 'https://open.longbridge.com') {
-        html = html.split('https://open.longbridge.com').join(regionCfg.siteHostname)
-      }
-      if (regionCfg?.apiBaseUrl && regionCfg.apiBaseUrl !== 'https://openapi.longbridge.com') {
-        html = html.split('https://openapi.longbridge.com').join(regionCfg.apiBaseUrl)
+      // Region URL rewriting: replace global hostnames (URL form + bare-text form) with region hostnames in final HTML
+      for (const [from, to] of buildRegionUrlReplacements()) {
+        html = html.split(from).join(to)
       }
       return html
     },
@@ -136,14 +131,8 @@ export default defineConfig(
 
       rmSync(tmpDir, { recursive: true, force: true })
 
-      // Region URL rewriting for static assets (site + API hostnames)
-      const staticReplacements: [string, string][] = []
-      if (regionCfg?.siteHostname && regionCfg.siteHostname !== 'https://open.longbridge.com') {
-        staticReplacements.push(['https://open.longbridge.com', regionCfg.siteHostname])
-      }
-      if (regionCfg?.apiBaseUrl && regionCfg.apiBaseUrl !== 'https://openapi.longbridge.com') {
-        staticReplacements.push(['https://openapi.longbridge.com', regionCfg.apiBaseUrl])
-      }
+      // Region URL rewriting for static assets (site + API hostnames, URL + bare-text form)
+      const staticReplacements = buildRegionUrlReplacements()
       if (staticReplacements.length > 0) {
         const installDir = resolve(siteConfig.outDir, 'longbridge-terminal')
         for (const file of ['install', 'install.ps1']) {
@@ -167,7 +156,11 @@ export default defineConfig(
 
     /* prettier-ignore */
     head: [
-    ['link', { rel: 'shortcut icon', type: 'image/x-icon', href: 'https://assets.wbrks.com/assets/logo/logo1.png' }],
+    ['link', { rel: 'shortcut icon', type: 'image/svg+xml', href: 'https://assets.lbkrs.com/uploads/bf1df347-6ee7-4f6d-b716-171c74e24521/logo-light.svg' }],
+    ['link', { rel: 'apple-touch-icon', media: '(prefers-color-scheme: light)', href: 'https://assets.lbkrs.com/uploads/bf1df347-6ee7-4f6d-b716-171c74e24521/logo-light.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', sizes: '192x192', media: '(prefers-color-scheme: light)', href: 'https://assets.lbkrs.com/uploads/bf1df347-6ee7-4f6d-b716-171c74e24521/logo-light.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', sizes: '512x512', media: '(prefers-color-scheme: light)', href: 'https://assets.lbkrs.com/uploads/bf1df347-6ee7-4f6d-b716-171c74e24521/logo-light.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', media: '(prefers-color-scheme: dark)', href: 'https://assets.lbkrs.com/uploads/1e1dcd32-a8a5-401f-a01c-aabec0cf9ff9/logo-dark.svg' }],
     ['meta', { name: 'theme-color', content: '#5f67ee' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:site', content: 'https://open.longbridge.com' }],
@@ -180,7 +173,8 @@ export default defineConfig(
     }
     gtag('js', new Date());
     gtag('config', 'G-P81Y8BDYYS');`],
-    ['script', { defer: '', src: 'https://assets.lbkrs.com/pkg/sensorsdata/1.21.13.min.js' }],
+    ['script', {}, `window.__LB_PROXY__ = ${JSON.stringify(oneTapProxy)};`],
+    ['script', { defer: '', src: 'https://assets.lbkrs.com/pkg/sensorsdata/1.27.11.min.js' }],
     ['script', { async: '', src: 'https://at.alicdn.com/t/c/font_2621450_y740y72ffjq.js' }],
     ['script', { src: 'https://assets.wbrks.com/plugin/session/google-one-tap.es.js', 'data-proxy': oneTapProxy }],
     ['script', { async: '', src: heloraScriptSrc, 'data-helora-proxy': isReleaseBuild ? 'prod' : 'staging' }],
@@ -304,7 +298,8 @@ export default defineConfig(
                 res.statusCode = upstream.status
                 upstream.headers.forEach((value, key) => {
                   const lower = key.toLowerCase()
-                  if (lower === 'content-encoding' || lower === 'content-length' || lower === 'transfer-encoding') return
+                  if (lower === 'content-encoding' || lower === 'content-length' || lower === 'transfer-encoding')
+                    return
                   res.setHeader(key, value)
                 })
                 const buf = Buffer.from(await upstream.arrayBuffer())
@@ -334,14 +329,39 @@ export default defineConfig(
           },
         },
         {
+          // Rewrite hardcoded global hostnames in source modules (Vue / TS / JSON) for region builds.
+          // markdown-it plugin + transformHtml don't reach Vite-compiled string literals.
+          name: 'region-source-url-rewrite',
+          enforce: 'pre' as const,
+          transform(src: string, id: string) {
+            if (id.includes('node_modules')) return
+            if (!/\.(vue|ts|tsx|js|jsx|json|ya?ml)(\?|$)/.test(id)) return
+            const replacements = buildRegionUrlReplacements()
+            if (replacements.length === 0) return
+            let code = src
+            let changed = false
+            for (const [from, to] of replacements) {
+              if (code.includes(from)) {
+                code = code.split(from).join(to)
+                changed = true
+              }
+            }
+            return changed ? { code, map: null } : undefined
+          },
+        },
+        {
           name: 'fetch-mcp-tools',
           async buildStart() {
-            const res = await fetch(MCP_TOOLS_URL)
-            if (!res.ok) throw new Error(`fetch mcp tools failed: HTTP ${res.status}`)
-            const json = await res.json()
-            mkdirSync(dirname(MCP_TOOLS_DATA_PATH), { recursive: true })
-            writeFileSync(MCP_TOOLS_DATA_PATH, JSON.stringify(json, null, 2))
-            console.log('✓ mcp-tools.json fetched')
+            try {
+              const res = await fetch(MCP_TOOLS_URL)
+              if (!res.ok) throw new Error(`fetch mcp tools failed: HTTP ${res.status}`)
+              const json = await res.json()
+              mkdirSync(dirname(MCP_TOOLS_DATA_PATH), { recursive: true })
+              writeFileSync(MCP_TOOLS_DATA_PATH, JSON.stringify(json, null, 2))
+              console.log('✓ mcp-tools.json fetched')
+            } catch (e) {
+              console.warn('⚠ mcp-tools.json fetch failed, using cached data:', (e as Error).message)
+            }
           },
         },
         groupIconVitePlugin(),

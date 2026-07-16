@@ -9,7 +9,7 @@ next: false
 
 # Longbridge MCP 服务
 
-Longbridge 提供托管的 HTTP MCP（Model Context Protocol）服务，让你在 AI 编程助手或对话工具中直接使用 Longbridge 的行情与账户能力，无需手动管理 API 密钥。
+Longbridge 提供托管的 MCP（Model Context Protocol）服务，让你在 ChatGPT、AI 编程助手或其他对话工具中直接使用 [Longbridge 的行情](https://longbridge.com/markets)与账户能力，无需手动管理 API 密钥。
 
 :::tip MCP 服务地址
 
@@ -21,14 +21,14 @@ Longbridge 提供托管的 HTTP MCP（Model Context Protocol）服务，让你�
 
 Longbridge MCP 暴露 100+ 工具，覆盖六大能力域，客户端连接后会自动发现——无需手动配置。
 
-| 能力             | 覆盖范围                                     |
-| ---------------- | -------------------------------------------- |
-| **实时行情**     | 报价、K 线、深度、经纪队列、逐笔、分时资金流 |
-| **基本面与研究** | 公司资料、分红、估值、高管持仓、A/H 溢价     |
-| **衍生品**       | 期权链、涡轮筛选、发行商、涡轮报价           |
-| **账户与组合**   | 余额、持仓、资金流水、自选股及分组           |
-| **交易**         | 下单、改单、撤单、可买量估算                 |
-| **自动化**       | 股价提醒、定投（DCA）计划                    |
+| 能力             | 覆盖范围                                                 |
+| ---------------- | -------------------------------------------------------- |
+| **[实时行情](https://longbridge.com/markets)**     | 报价、K 线、深度、经纪队列、逐笔、分时资金流             |
+| **基本面与研究** | 公司资料、[分红](https://longbridge.com/calendar/dividend)、估值、高管持仓、A/H 溢价、宏观经济指标   |
+| **衍生品**       | 期权链、涡轮筛选、发行商、涡轮报价                       |
+| **账户与组合**   | 余额、持仓、资金流水、自选股及分组                       |
+| **交易**         | 下单、改单、撤单、可买量估算                             |
+| **自动化**       | 股价提醒、定投（DCA）计划                                |
 
 实际可用工具因地区、账户等级与 OAuth 授权范围而异。
 
@@ -38,33 +38,32 @@ Longbridge MCP 暴露 100+ 工具，覆盖六大能力域，客户端连接后�
 
 ## 前置条件
 
-- 已拥有 Longbridge 账户并完成开户，或开通模拟账户
-- 使用支持 MCP OAuth 2.1 的 AI 客户端（见下方兼容性说明）
+- 已拥有 [Longbridge 账户](https://longbridge.com/hk/download)并完成开户，或开通模拟账户
+- 支持 MCP OAuth 2.1 的其他 AI 客户端（见下方兼容性说明）
 
 ## 客户端接入
 
-> 各客户端的 MCP 配置格式可能随版本变更，以客户端官方文档为准。以下提供核心配置参数。
+推荐优先从 ChatGPT 开始使用，因为 Longbridge 已经可以直接在 ChatGPT Plugins 中搜索并授权。其他 MCP 客户端的配置格式可能随版本变更，请以客户端官方文档为准。
 
 ### ChatGPT
 
-需要先开启 [ChatGPT Developer Mode](https://developers.openai.com/api/docs/guides/developer-mode)，然后才能添加 Longbridge MCP。
+Longbridge 已经作为官方 ChatGPT App 提供。
 
-在 ChatGPT 中前往 [Settings → Apps](https://chatgpt.com/#settings/Connectors) → [Advanced settings → Developer mode](https://chatgpt.com/#settings/Connectors/Advanced)，并开启「Developer mode」。
+在 ChatGPT 网页版、桌面端或手机客户端中：
 
-![](https://assets.lbctrl.com/uploads/02e8a24a-be0b-49b2-a4eb-9952bc7a4f9b/enable-chatgpt-dev.png)
+1. 打开 **Plugins**
+2. 搜索 `longbridge`，或直接打开 [Longbridge ChatGPT App](https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef)
+3. 选择 **Longbridge**，并按提示完成授权登录
 
-之后点击「Back」返回 Apps 列表，点击「Create app」按钮创建一个新的 App，即可在此新增 Longbridge MCP。
+![在 ChatGPT Plugins 中搜索 Longbridge](https://assets.lbkrs.com/uploads/aeb84040-b2c7-442d-af46-adfab66297a1/scr-20260707-nbjr.png)
 
-在表单内填写：
+![授权 Longbridge ChatGPT App](https://assets.lbkrs.com/uploads/a66bcd75-d747-4259-b684-a689d324716c/scr-20260707-nbno.png)
 
-- Name：`Longbridge`
-- Description：`Investment market insights`
-- Connection (Server URL):`https://mcp.longbridge.com`
-- Authentication：OAuth
+完成授权后，每次提问时需在消息前加上 `@longbridge`，否则 ChatGPT 不会调用 Longbridge 来查询数据。例如：`@longbridge 查询我的当日订单`。
 
-完整演示视频：
-
-<video src="https://assets.lbctrl.com/uploads/a9e06030-99e7-4f1b-90a6-d5efd5bb1fe8/longbridge-mcp-for-chatgpt.mp4" controls />
+:::warning ChatGPT 中不含交易下单功能
+由于 ChatGPT 平台规则限制，Longbridge ChatGPT App 不含下单及其他交易相关工具。如需使用交易功能，请改用 Claude Code、Cursor 等其他 MCP 客户端。
+:::
 
 ### Claude Code
 
@@ -97,6 +96,20 @@ codex mcp add longbridge --url https://mcp.longbridge.com
 3. 点击 **Save**
 4. 回到 MCP Servers 列表，点击 `longbridge` 条目上的 **Authenticate** 完成 OAuth 授权
 
+### Grok
+
+打开 [Grok Connectors](https://grok.com/connectors)，添加自定义 MCP Server：
+
+1. 在左侧边栏选择 **Skills and Connectors** → **Connectors** → **New Connector** → **Custom**
+2. 填写：
+   - Name：`Longbridge`
+   - Server URL：`https://mcp.longbridge.com`
+3. 点击 **Add Connector**，跟随 Longbridge OAuth 2 授权流程完成添加
+
+![](https://assets.lbkrs.com/uploads/08d07992-5463-4bfd-a4e4-97fab6e9cb41/grok-0.png)
+
+![](https://assets.lbkrs.com/uploads/56eee753-f3d4-4186-b024-ee0145f4eb54/grok-1.png)
+
 ### Cursor
 
 Settings → MCP Servers → 添加 Remote MCP Server，填入上方地址即可。
@@ -119,9 +132,27 @@ Settings → MCP Servers → 添加 Remote MCP Server，填入上方地址即可
 
 设置 → MCP 服务器 → 添加，填入上方地址即可。
 
+### Manus
+
+在 Manus 中打开 **Plugins** 窗口，点击右侧的 **Create** 按钮，从弹出菜单中选择 **Import MCP by JSON**，粘贴以下 JSON 即可完成导入：
+
+```json
+{
+  "mcpServers": {
+    "longbridge": {
+      "url": "https://mcp.longbridge.com"
+    }
+  }
+}
+```
+
+![](https://assets.lbctrl.com/uploads/f3aa3f71-c7a1-48b3-91dc-ea82a7018b53/scr-20260625-ttzy.png)
+
 ## OAuth 授权流程
 
 Longbridge MCP 使用标准 OAuth 2.1 授权，你无需向客户端提供 API 密钥或 Token。
+
+在 ChatGPT 中，授权会在从 Plugins 添加 Longbridge 时完成；在其他 MCP 客户端中，通常由首次工具调用触发浏览器授权流程。
 
 ```
 AI 客户端                  浏览器                    Longbridge
@@ -159,11 +190,11 @@ Longbridge MCP 依赖 **MCP OAuth 2.1** 标准。若客户端未完整实现该�
 - **最小权限**：授权时仅同意当前任务所需的 scope，避免过度授权
 - **交易确认**：涉及下单等交易操作时，在 AI 提示词中明确要求执行前人工确认
 - **凭证安全**：OAuth 凭证由客户端管理，避免将其复制到不受信任的环境
-- **定期审查**：定期在 Longbridge 账户安全设置中检查并撤销不再使用的授权
+- **定期审查**：定期在 [Longbridge 账户](https://longbridge.com/hk/download)安全设置中检查并撤销不再使用的授权
 
 ## 推荐使用方式
 
-1. **从只读能力开始**：优先使用行情查询、持仓查看等低风险功能，熟悉工具行为
+1. **从只读能力开始**：优先使用[行情查询](https://longbridge.com/markets)、持仓查看等低风险功能，熟悉工具行为
 2. **逐步开放交易能力**：确认权限范围和风控逻辑后，再使用下单相关工具
 3. **在提示词中加入约束**：例如"每笔交易金额不超过 X"、"执行前向我确认"等明确限制
 

@@ -166,7 +166,7 @@ Let's take obtaining assets as an example to demonstrate how to use the SDK.
 
 ## Configuration
 
-1. Download App and open an account.
+1. [Download App](https://longbridge.com/hk/download) and open an account.
 2. Get authentication credentials from [Longbridge Developers](https://open.longbridge.com) official website
 
 ### Authentication Methods
@@ -424,7 +424,7 @@ Please pay attention to protect your **Access Token** information, anyone who ge
 | `LONGBRIDGE_QUOTE_WS_URL`          | Quote websocket endpoint url (Default: `wss://openapi-quote.longbridge.com/v2`)                                                                                          |
 | `LONGBRIDGE_TRADE_WS_URL`          | Trade websocket endpoint url (Default: `wss://openapi-trade.longbridge.com/v2`)                                                                                          |
 | `LONGBRIDGE_REGION`                | Override API region; SDK auto-selects by network. Set to `cn` or `hk` if incorrect.                                                                                      |
-| `LONGBRIDGE_ENABLE_OVERNIGHT`      | Enable overnight quote, `true` or `false` (Default: `false`). Overnight quotes are included free in Nasdaq Basic. US stocks only. |
+| `LONGBRIDGE_ENABLE_OVERNIGHT`      | Enable overnight quote, `true` or `false` (Default: `false`). Overnight quotes are included free in US LV1. US stocks only. |
 | `LONGBRIDGE_PUSH_CANDLESTICK_MODE` | `realtime` or `confirmed` (Default: `realtime`)                                                                                                                          |
 | `LONGBRIDGE_PRINT_QUOTE_PACKAGES`  | Print quote packages when connected, `true` or `false` (Default: `true`)                                                                                                 |
 | `LONGBRIDGE_LOG_PATH`              | Set the path of the log files (Default: no logs)                                                                                                                         |
@@ -517,6 +517,26 @@ new_token = config.refresh_access_token(expired_at=datetime.now() + timedelta(da
 print("New access token:", new_token)
 # Use the new token to build a new Config, or persist it as LONGBRIDGE_ACCESS_TOKEN
 new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+```
+
+  </TabItem>
+  <TabItem value="python-async" label="Python (async)">
+
+```python
+import asyncio
+from datetime import datetime, timedelta
+from longbridge.openapi import Config
+
+async def main() -> None:
+    config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN")
+    # Expire 3 years from now
+    new_token = await config.refresh_access_token_async(expired_at=datetime.now() + timedelta(days=365 * 3))
+    print("New access token:", new_token)
+    # Use the new token to build a new Config, or persist it as LONGBRIDGE_ACCESS_TOKEN
+    new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
   </TabItem>
@@ -914,8 +934,8 @@ After running, the output is as follows:
 
 To subscribe to market data, please check the [Developer Center](https://open.longbridge.com/account) - "Quote authority" is correct
 
-- HK Market - BMP basic quotation is unable to subscribe with WebSocket as it has no real-time quote push.
-- US Market - Nasdaq Basic (Only OpenAPI).
+- [HK Market](https://longbridge.com/hk/) - BMP basic quotation is unable to subscribe with WebSocket as it has no real-time quote push.
+- US Market - US LV1 (Only OpenAPI).
 
 Before running, visit the [Developer Center](https://open.longbridge.com/dashboard) and ensure that the account has the correct quote level.
 

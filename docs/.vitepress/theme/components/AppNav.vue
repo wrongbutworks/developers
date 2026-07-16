@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useLocalePath, getBasenameLocale } from '../utils/i18n'
 import { createLoginRedirectPath } from '../utils/navigate'
 import { isLoginState, initLoginState } from '../composables/useLoginState'
+import { detectWhaleApp } from '../composables/useWhaleApp'
 import { useAvatar } from './UserAvatar/uesAvatar'
 import UserAvatarIcon from './UserAvatar/UserAvatarIcon.vue'
 import UserAvatarDropdown from './UserAvatar/UserAvatarDropdown.vue'
@@ -139,7 +140,7 @@ function buildHeloraBootConfig(locale: string) {
     configKey: 'helora-agent-openapi',
     source: 'web_openapi',
     locale,
-    theme: (isDark.value ? 'dark' : 'light') as 'dark' | 'light',
+    theme: { mode: (isDark.value ? 'dark' : 'light') as 'dark' | 'light' },
     headerActions: [
       {
         id: 'issue',
@@ -182,19 +183,17 @@ onMounted(() => {
   initLoginState()
   document.addEventListener('click', onAvatarClickOutside)
 
+  // Helora 客服在 whale app 内嵌 webview 与 cn 站点不加载（前者宿主自带，后者尚未接入）
+  if (detectWhaleApp() || isCnDomain) {
+    return
+  }
+
   waitForHeloraAndBoot()
 
-  // 主题切换 → 通知 Helora
+  // 主题切换 → 通知 Helora 热更新（语言切换走整页刷新，下次 mount 直接以新 locale boot，无需 watch）
   watch(isDark, (dark) => {
     if (!heloraBooted) return
-    window.Helora?.setTheme?.(dark ? 'dark' : 'light')
-  })
-
-  // 语言切换 → 通知 Helora（当前 switchLocale 走 location.href 整页刷新，
-  // 下次 mount 会直接以新 locale boot；这里兜底 SPA 路由场景）
-  watch(currentLocale, (locale, prev) => {
-    if (!heloraBooted || !locale || locale === prev) return
-    window.Helora?.boot?.(buildHeloraBootConfig(locale))
+    window.Helora?.setThemeMode?.(dark ? 'dark' : 'light')
   })
 })
 onUnmounted(() => {

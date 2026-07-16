@@ -14,6 +14,7 @@ const zhCNLocale = augmentLocale(_zhCNLocale)
 const zhHKLocale = augmentLocale(_zhHKLocale)
 
 const { lang } = useData()
+const CHATGPT_APP_URL = 'https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef'
 
 const LOCALE = {
   en: {
@@ -21,9 +22,12 @@ const LOCALE = {
       eyebrow: 'AI · Skill',
       title1: 'Longbridge Skill',
       title2: 'Unlock market insights, deep research and intelligent trading for your AI.',
-      desc: 'With Longbridge Skill, your AI assistant — Claude, Cursor, ChatGPT, Gemini, Codex — can screen stocks, decode earnings, track insider moves, and place orders, all in plain conversation.',
+      desc: 'For Claude Code, Codex, Gemini, and other agents, Longbridge Skill lets your AI <a href="https://longbridge.com/en/screener" target="_blank" rel="noreferrer">screen stocks</a>, decode earnings, track insider moves, and place orders in plain conversation.',
+      chatgptLine:
+        '<a class="skill-chatgpt-link" href="https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef">ChatGPT</a> can install <a class="skill-chatgpt-link" href="https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef">Longbridge</a> directly and use it with <code>@longbridge</code>.',
       tabConnect: 'Connect AI',
       tabPrompt: 'Copy command',
+      tabChatGPT: 'ChatGPT',
       connectLabel: 'Authorization happens upfront — grab a code on the Connect page, hand it to your AI, and it takes care of the rest:',
       connectSteps: [
         'Sign in on the Connect page to get a one-time auth code',
@@ -31,6 +35,13 @@ const LOCALE = {
         'Your AI redeems the code and plugs into Longbridge — no browser hops along the way',
       ],
       connectCta: 'Connect AI',
+      chatgptLabel: 'Enable Longbridge MCP in ChatGPT in under a minute:',
+      chatgptSteps: [
+        'Open ChatGPT Apps and search for longbridge',
+        'Select Longbridge and authorize your Longbridge account',
+        'Type @longbridge in the message box to query market data',
+      ],
+      chatgptCta: 'Open Longbridge in ChatGPT',
       installLabel: 'Copy and send to any AI — it will walk you through install:',
       installLink: 'View installation guide for each client',
       agentsLabel: 'Supported AI tools',
@@ -91,7 +102,7 @@ const LOCALE = {
     cases: {
       eyebrow: 'SEE IT IN ACTION',
       title: 'Real user cases, real returns.',
-      desc: 'Hand-picked write-ups from the Longbridge community. From quick experiments to fully-deployed quant systems — see what people are shipping with Skill.',
+      desc: 'Hand-picked write-ups from the <a href="https://longbridge.com/en/news">Longbridge community</a>. From quick experiments to fully-deployed quant systems — see what people are shipping with Skill.',
       read: 'Read case',
       award: {
         tag: 'AWARD',
@@ -116,9 +127,9 @@ const LOCALE = {
       },
       card3: {
         title: 'Install via Npx',
-        desc: 'For Claude Code, Codex, and similar tools — installs all skills globally.',
+        desc: 'For Codex, Claude Code, and similar tools — installs all skills globally.',
       },
-      installCmd: `Install Longbridge AI toolkit following the guide:\n${siteHostname}/skill/install.md\n\And complete login and test with a market data query.`,
+      installCmd: `Install Longbridge AI toolkit following the guide:\n${siteHostname}/skill/install.md\n\nAnd complete login and test with a market data query.`,
       footer: {
         also: 'Also available on',
         and: 'and',
@@ -131,9 +142,12 @@ const LOCALE = {
       eyebrow: 'AI · Skill',
       title1: 'Longbridge Skill',
       title2: '为您的 AI 解锁市场洞察、深度研究与智能交易',
-      desc: '借助 Longbridge Skill，您的 AI 助手——Claude、Cursor、ChatGPT、Gemini、Codex——可以筛选股票、解读财报、追踪机构动向，并直接下单，全程自然对话。',
+      desc: 'Claude Code、Codex、Gemini 等 Agent 可通过 Longbridge Skill <a href="https://longbridge.com/en/screener" target="_blank" rel="noreferrer">筛选股票</a>、解读财报、追踪机构动向，并直接下单。',
+      chatgptLine:
+        '<a class="skill-chatgpt-link" href="https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef">ChatGPT</a> 可以直接安装 <a class="skill-chatgpt-link" href="https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef">Longbridge</a>，并通过 <code>@longbridge</code> 来使用。',
       tabConnect: 'Connect AI',
       tabPrompt: '复制命令',
+      tabChatGPT: 'ChatGPT',
       connectLabel: '授权一步前置——在 Connect 页面拿到授权码，交给 AI，剩下的它来完成：',
       connectSteps: [
         '登录 Connect 页面，获取一次性授权码',
@@ -141,6 +155,13 @@ const LOCALE = {
         'AI 自动兑换授权码并接入 Longbridge，全程无需跳转浏览器',
       ],
       connectCta: 'Connect AI',
+      chatgptLabel: '在 ChatGPT 中快速启用 Longbridge MCP：',
+      chatgptSteps: [
+        '打开 ChatGPT Apps，搜索 longbridge',
+        '选择 Longbridge，并按提示完成授权登录',
+        '在输入框中输入 @longbridge 开始查询数据',
+      ],
+      chatgptCta: '在 ChatGPT 中打开 Longbridge',
       installLabel: '复制发送给任意 AI——它将引导您完成安装：',
       installLink: '查看各客户端安装指南',
       agentsLabel: '支持的 AI 工具',
@@ -201,7 +222,7 @@ const LOCALE = {
     cases: {
       eyebrow: '实战案例',
       title: '真实用户案例，真实回报',
-      desc: '精选长桥社区用户分享。从快速实验到全面部署的量化系统——看看大家用 Skill 在做什么。',
+      desc: '精选<a href="https://longbridge.com/news">长桥社区</a>用户分享。从快速实验到全面部署的量化系统——看看大家用 Skill 在做什么。',
       read: '阅读案例',
       award: {
         tag: '奖励',
@@ -243,7 +264,7 @@ const LOCALE = {
       },
       card3: {
         title: '通过 Npx 安装',
-        desc: '适用于 Claude Code、Codex 等工具——全局安装所有 Skill。',
+        desc: '适用于 Codex、Claude Code 等工具——全局安装所有 Skill。',
       },
       installCmd: `请按照以下指南安装 Longbridge AI toolkit：\n${siteHostname}/skill/install.md\n\n安装完成后，完成登录授权，查询一支股票行情确认可用。`,
       footer: {
@@ -262,7 +283,7 @@ const LOCALE = {
         '日内资金流向时间序列',
         '市场情绪温度指数（0–100）',
         '基础静态参数（手数、股本、EPS）',
-        '期权报价与期权链',
+        '<a href="https://longbridge.com/markets">期权报价</a>与期权链',
         '权证报价及按标的筛选权证',
       ],
       fundamentals: [
@@ -278,7 +299,7 @@ const LOCALE = {
         'SEC / 监管文件（完整 Markdown 内容）',
       ],
       calendar: ['按标的查看即将发布的财报', '重要宏观数据事件', '按市场查看即将派息事件', '交易时段安排与节假日历'],
-      news: ['按标的获取最新资讯', '社区讨论话题', '自选股分组：查看、新建、编辑、删除'],
+      news: ['按标的获取<a href="https://longbridge.com/news">最新资讯</a>', '社区讨论话题', '自选股分组：查看、新建、编辑、删除'],
       account: [
         '全子账户股票持仓',
         '全子账户基金持仓',
@@ -300,7 +321,7 @@ const LOCALE = {
       {
         nav: '跨市场选股',
         title: 'HK · 美股 · A 股 · 新加坡——一次筛选，全市场覆盖',
-        desc: '跨市场追踪机会繁琐易错。告诉 AI 你的条件——市值、PE 区间、板块——再叠加 KDJ 金叉或 MACD 多头等技术信号，跨市场过滤，统一输出结果。查看所有支持市场的<a href="https://longbridge.com/markets">实时行情</a>。',
+        desc: '跨市场追踪机会繁琐易错。告诉 AI 你的条件——市值、PE 区间、板块——再叠加 KDJ 金叉或 MACD 多头等技术信号，跨市场过滤，统一输出结果。查看所有支持市场的<a href="https://longbridge.com/en/markets">实时行情</a>。',
         prompt: '从美股和港股中，筛选市值超 500 亿、PE 低于 25 的科技股，且近期出现 MACD 金叉——按市值排序。',
         summary:
           '美股 + 港股科技板块筛选完成——共 8 只股票满足市值 ≥ 500 亿、PE < 25 条件。其中 3 只确认出现近期 MACD 金叉（DIF 上穿 DEA）。',
@@ -366,9 +387,12 @@ const LOCALE = {
       eyebrow: 'AI · Skill',
       title1: 'Longbridge Skill',
       title2: '為您的 AI 解鎖市場洞察、深度研究與智能交易',
-      desc: '借助 Longbridge Skill，您的 AI 助手——Claude、Cursor、ChatGPT、Gemini、Codex——可以篩選股票、解讀財報、追蹤機構動向，並直接下單，全程自然對話。',
+      desc: 'Claude Code、Codex、Gemini 等 Agent 可透過 Longbridge Skill <a href="https://longbridge.com/en/screener" target="_blank" rel="noreferrer">篩選股票</a>、解讀財報、追蹤機構動向，並直接下單。',
+      chatgptLine:
+        '<a class="skill-chatgpt-link" href="https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef">ChatGPT</a> 可以直接安裝 <a class="skill-chatgpt-link" href="https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef">Longbridge</a>，並透過 <code>@longbridge</code> 來使用。',
       tabConnect: 'Connect AI',
       tabPrompt: '複製命令',
+      tabChatGPT: 'ChatGPT',
       connectLabel: '授權一步前置——在 Connect 頁面拿到授權碼，交給 AI，剩下的它來完成：',
       connectSteps: [
         '登入 Connect 頁面，獲取一次性授權碼',
@@ -376,6 +400,13 @@ const LOCALE = {
         'AI 自動兌換授權碼並接入 Longbridge，全程無需跳轉瀏覽器',
       ],
       connectCta: 'Connect AI',
+      chatgptLabel: '在 ChatGPT 中快速啟用 Longbridge MCP：',
+      chatgptSteps: [
+        '打開 ChatGPT Apps，搜尋 longbridge',
+        '選擇 Longbridge，並按提示完成授權登入',
+        '在輸入框中輸入 @longbridge 開始查詢數據',
+      ],
+      chatgptCta: '在 ChatGPT 中打開 Longbridge',
       installLabel: '複製發送給任意 AI——它將引導您完成安裝：',
       installLink: '查看各客戶端安裝指南',
       agentsLabel: '支援的 AI 工具',
@@ -436,7 +467,7 @@ const LOCALE = {
     cases: {
       eyebrow: '實戰案例',
       title: '真實用戶案例，真實回報。',
-      desc: '精選長橋社區用戶分享。從快速實驗到全面部署的量化系統——看看大家用 Skill 在做什麼。',
+      desc: '精選<a href="https://longbridge.com/news">長橋社區</a>用戶分享。從快速實驗到全面部署的量化系統——看看大家用 Skill 在做什麼。',
       read: '閱讀案例',
       award: {
         tag: '獎勵',
@@ -478,7 +509,7 @@ const LOCALE = {
       },
       card3: {
         title: '透過 Npx 安裝',
-        desc: '適用於 Claude Code、Codex 等工具——全局安裝所有 Skill。',
+        desc: '適用於 Codex、Claude Code 等工具——全局安裝所有 Skill。',
       },
       installCmd: `請按照以下指南安裝 Longbridge AI toolkit：\n${siteHostname}/skill/install.md\n\n安裝完成後，完成登錄授權，查詢一支股票行情確認可用。`,
       footer: {
@@ -497,7 +528,7 @@ const LOCALE = {
         '日內資金流向時間序列',
         '市場情緒溫度指數（0–100）',
         '基礎靜態參數（手數、股本、EPS）',
-        '期權報價與期權鏈',
+        '<a href="https://longbridge.com/markets">期權報價</a>與期權鏈',
         '權證報價及按標的篩選權證',
       ],
       fundamentals: [
@@ -513,7 +544,7 @@ const LOCALE = {
         'SEC / 監管文件（完整 Markdown 內容）',
       ],
       calendar: ['按標的查看即將發佈的業績', '重要宏觀數據事件', '按市場查看即將派息事件', '交易時段安排與節假日曆'],
-      news: ['按標的獲取最新資訊', '社區討論話題', '自選股分組：查看、新建、編輯、刪除'],
+      news: ['按標的獲取<a href="https://longbridge.com/news">最新資訊</a>', '社區討論話題', '自選股分組：查看、新建、編輯、刪除'],
       account: [
         '全子賬戶股票持倉',
         '全子賬戶基金持倉',
@@ -535,7 +566,7 @@ const LOCALE = {
       {
         nav: '跨市場選股',
         title: 'HK · 美股 · A 股 · 新加坡——一次篩選，全市場覆蓋',
-        desc: '跨市場追蹤機會繁瑣易錯。告訴 AI 你的條件——市值、PE 區間、板塊——再疊加 KDJ 金叉或 MACD 多頭等技術信號，跨市場過濾，統一輸出結果。查看所有支援市場的<a href="https://longbridge.com/markets">即時行情</a>。',
+        desc: '跨市場追蹤機會繁瑣易錯。告訴 AI 你的條件——市值、PE 區間、板塊——再疊加 KDJ 金叉或 MACD 多頭等技術信號，跨市場過濾，統一輸出結果。查看所有支援市場的<a href="https://longbridge.com/en/markets">即時行情</a>。',
         prompt: '從美股和港股中，篩選市值超 500 億、PE 低於 25 的科技股，且近期出現 MACD 金叉——按市值排序。',
         summary:
           '美股 + 港股科技板塊篩選完成——共 8 只股票滿足市值 ≥ 500 億、PE < 25 條件。其中 3 只確認出現近期 MACD 金叉（DIF 上穿 DEA）。',
@@ -825,10 +856,11 @@ const SKILL_CATS_DEF = [
 ]
 
 const SKILL_AGENTS = [
-  { name: 'Claude', mark: 'C', color: '#D97757' },
-  { name: 'Claude Code', mark: 'C', color: '#D97757' },
   { name: 'ChatGPT', mark: 'G', color: '#10A37F' },
+  { name: 'Claude', mark: 'C', color: '#D97757' },
   { name: 'Codex', mark: 'O', color: '#000000' },
+  { name: 'Grok', mark: 'G', color: '#000000' },
+  { name: 'Claude Code', mark: 'C', color: '#D97757' },
   { name: 'Cursor', mark: '➤', color: '#000000' },
   { name: 'Gemini', mark: 'G', color: '#1A73E8' },
   { name: 'OpenClaw', mark: 'O', color: 'var(--lb-brand)' },
@@ -865,14 +897,14 @@ const USER_CASES = [
   },
 ]
 
-const DEMO_AGENTS = ['OpenClaw', 'ChatGPT', 'Claude', 'Claude Code']
+const DEMO_AGENTS = ['ChatGPT', 'OpenClaw', 'Claude', 'Claude Code']
 
 const DEMO_SCENARIOS = [
   {
     id: 'screen',
     nav: 'Cross-Market Screening',
     title: 'HK · US · A-share · Singapore — multi-market screening in one shot.',
-    desc: 'Tracking opportunities across markets is brittle. Tell the AI your criteria — market cap, PE range, sector — and layer in technical signals like KDJ golden cross or MACD bullish. Cross-market filter, unified results. See <a href="https://longbridge.com/markets">live market data</a> for all supported markets.',
+    desc: 'Tracking opportunities across markets is brittle. Tell the AI your criteria — market cap, PE range, sector — and layer in technical signals like KDJ golden cross or MACD bullish. Cross-market filter, unified results. See <a href="https://longbridge.com/en/markets">live market data</a> for all supported markets.',
     prompt:
       'From US + HK markets, screen for tech stocks with market cap above ¥50B, PE under 25, and recent MACD golden cross — sort by market cap.',
     summary:
@@ -995,7 +1027,7 @@ const CAP_REFERENCE = [
       'Intraday capital flow & distribution',
       'Market sentiment temperature index (0–100)',
       'Static reference info (lot size, shares, EPS)',
-      'Option quotes & option chain',
+      '<a href="https://longbridge.com/markets">Option quotes</a> & option chain',
       'Warrant quotes & warrants by underlying',
     ],
   },
@@ -1026,7 +1058,7 @@ const CAP_REFERENCE = [
   {
     tKey: 'news',
     items: [
-      'Latest news articles for a symbol',
+      '<a href="https://longbridge.com/en/news">Latest news articles</a> for a symbol',
       'Community discussion topics',
       'Watchlist groups: list, create, update, delete',
     ],
@@ -1058,7 +1090,7 @@ const CAP_REFERENCE = [
 const activeCat = ref('All')
 const scenarioIdx = ref(0)
 const activeAgent = ref('OpenClaw')
-const installMode = ref<'connect' | 'prompt'>('connect')
+const installMode = ref<'connect' | 'prompt' | 'chatgpt'>('connect')
 const copied = ref(false)
 const copiedGetStarted = ref(false)
 
@@ -1303,9 +1335,29 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
             <span style="color: var(--lb-brand)">{{ content.hero.title2 }}</span>
           </h1>
           <p
-            class="t-body"
-            style="margin-top: 24px; max-width: 640px; margin-left: auto; margin-right: auto; font-size: 16px">
-            {{ content.hero.desc }}
+            class="t-body skill-hero-desc"
+            style="margin-top: 24px; max-width: 640px; margin-left: auto; margin-right: auto; font-size: 16px"
+            v-html="content.hero.desc"></p>
+          <p class="skill-chatgpt-feature">
+            <svg
+              class="skill-chatgpt-sparkles"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <path
+                d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z" />
+              <path d="M20 3v4" />
+              <path d="M22 5h-4" />
+              <path d="M4 17v2" />
+              <path d="M5 18H3" />
+            </svg>
+            <span v-html="content.hero.chatgptLine"></span>
           </p>
 
           <div class="skill-hero-install">
@@ -1319,6 +1371,11 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
                 :class="['skill-hero-seg-btn', installMode === 'prompt' && 'is-active']"
                 @click="installMode = 'prompt'">
                 {{ content.hero.tabPrompt }}
+              </button>
+              <button
+                :class="['skill-hero-seg-btn', installMode === 'chatgpt' && 'is-active']"
+                @click="installMode = 'chatgpt'">
+                {{ content.hero.tabChatGPT }}
               </button>
             </div>
 
@@ -1351,7 +1408,7 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
               </div>
             </template>
 
-            <template v-else>
+            <template v-else-if="installMode === 'prompt'">
               <div class="skill-hero-install-label">{{ content.hero.installLabel }}</div>
               <div class="skill-hero-install-cmd">
                 <code>{{ installCmd }}</code>
@@ -1398,6 +1455,32 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
                   <path d="m12 5 7 7-7 7" />
                 </svg>
               </a>
+            </template>
+
+            <template v-else>
+              <div class="skill-hero-install-label">{{ content.hero.chatgptLabel }}</div>
+              <div class="skill-hero-connect-card">
+                <div v-for="(step, i) in content.hero.chatgptSteps" :key="i" class="skill-hero-connect-step">
+                  <span class="skill-hero-connect-step-num">{{ i + 1 }}</span>
+                  <span>{{ step }}</span>
+                </div>
+                <a class="btn btn-dark" :href="CHATGPT_APP_URL" target="_blank" rel="noreferrer">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M15 3h6v6" />
+                    <path d="M10 14 21 3" />
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  </svg>
+                  {{ content.hero.chatgptCta }}
+                </a>
+              </div>
             </template>
           </div>
 
@@ -1662,7 +1745,7 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
                 </svg>
               </div>
               <span class="sc-card-pkg">{{ skill.pkg }}</span>
-              <p class="sc-card-desc">{{ skill.desc }}</p>
+              <p class="sc-card-desc" v-html="skill.desc"></p>
               <div class="sc-card-prompt">
                 <svg
                   width="12"
@@ -1736,7 +1819,7 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
                   style="color: var(--lb-up); flex-shrink: 0; margin-top: 4px">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span>{{ item }}</span>
+                <span v-html="item"></span>
               </li>
             </ul>
           </div>
@@ -1750,9 +1833,7 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
         <div style="text-align: left; max-width: 640px; margin-bottom: 32px">
           <span class="eyebrow">{{ content.cases.eyebrow }}</span>
           <h2 class="h-section" style="margin-top: 14px">{{ content.cases.title }}</h2>
-          <p class="t-meta" style="margin-top: 10px; line-height: 1.55">
-            {{ content.cases.desc }}
-          </p>
+          <p class="t-meta" style="margin-top: 10px; line-height: 1.55" v-html="content.cases.desc"></p>
         </div>
 
         <div class="user-cases-grid">
@@ -1836,9 +1917,7 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
               </svg>
             </div>
             <h3 class="h-card" style="margin-top: 16px">{{ content.getstarted.card1.title }}</h3>
-            <p class="t-meta" style="margin-top: 8px; line-height: 1.55; flex: 1">
-              {{ content.getstarted.card1.desc }}
-            </p>
+            <p class="t-meta" style="margin-top: 8px; line-height: 1.55; flex: 1" v-html="content.getstarted.card1.desc"></p>
             <div class="skill-getstarted-cmd">
               <code>{{ installCmd }}</code>
               <button class="code-copy" @click="copyGetStarted" :title="copiedGetStarted ? 'Copied!' : 'Copy'">
@@ -2246,6 +2325,110 @@ function triggerRipple(event: MouseEvent, el: HTMLElement) {
 .skill-hero-inner {
   position: relative;
   z-index: 1;
+}
+.skill-hero-desc {
+  margin-bottom: 0;
+}
+.skill-chatgpt-feature {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: fit-content;
+  max-width: min(640px, 100%);
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #f9f9f9;
+  color: var(--lb-fg-1);
+  font-size: 15px;
+  line-height: 1.55;
+  overflow: hidden;
+}
+.skill-chatgpt-feature::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--chatgpt-border-angle, 0deg),
+    rgb(59 130 246 / 0.62),
+    rgb(139 92 246 / 0.62),
+    rgb(239 68 68 / 0.5),
+    rgb(236 72 153 / 0.48),
+    rgb(59 130 246 / 0.62)
+  );
+  pointer-events: none;
+  animation: chatgpt-border-spin 5.2s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.skill-chatgpt-feature > * {
+  position: relative;
+  z-index: 1;
+}
+.skill-chatgpt-sparkles {
+  flex: 0 0 auto;
+  color: #f59e0b;
+}
+.skill-chatgpt-feature :deep(.skill-chatgpt-link) {
+  color: var(--lb-fg-1);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgb(0 0 0 / 0.32);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.skill-chatgpt-feature :deep(.skill-chatgpt-link:hover) {
+  color: var(--lb-fg-1);
+  text-decoration-thickness: 2px;
+}
+.skill-chatgpt-feature :deep(code) {
+  border-radius: 5px;
+  padding: 1px 6px;
+  border: 1px solid rgb(16 163 127 / 0.28);
+  color: #065f46;
+  background: rgb(16 163 127 / 0.12);
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.92em;
+  font-weight: 700;
+}
+.dark .skill-chatgpt-feature {
+  border-color: rgb(255 255 255 / 0.12);
+  background: #202123;
+  color: #ececf1;
+}
+.dark .skill-chatgpt-feature :deep(.skill-chatgpt-link),
+.dark .skill-chatgpt-feature :deep(.skill-chatgpt-link:hover) {
+  color: #ececf1;
+  text-decoration-color: rgb(236 236 241 / 0.44);
+}
+.dark .skill-chatgpt-feature :deep(code) {
+  border-color: rgb(16 163 127 / 0.42);
+  color: #d1fae5;
+  background: rgb(16 163 127 / 0.22);
+}
+@property --chatgpt-border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes chatgpt-border-spin {
+  to {
+    --chatgpt-border-angle: 360deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skill-chatgpt-feature::before {
+    animation: none;
+  }
 }
 .skill-hero-install {
   margin-top: 40px;

@@ -7,6 +7,10 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.24.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.24.0)
+
+- **New `macrodata` command** — Browse 400+ macrodata indicators across US/HK/CN/EU/JP/SG; list mode with optional `--country` filter, history mode for a specific indicator code with `--start`/`--end` date range; `--format json` for AI/scripting workflows
+
 ### [v0.23.2](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.23.2)
 
 - **Local-time date parsing for CLI arguments** — date-only and legacy minute-resolution datetime inputs are interpreted in the user's local timezone before API calls; RFC 3339 datetime inputs are also supported

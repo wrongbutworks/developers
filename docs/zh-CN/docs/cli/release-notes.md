@@ -7,6 +7,10 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.24.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.24.0)
+
+- **新增 `macrodata` 命令** — 浏览 400+ 宏观数据指标，覆盖美/港/中/欧/日/新六大市场；列表模式支持 `--country` 筛选，历史模式支持 `--start`/`--end` 日期区间；`--format json` 满足 AI / 脚本需求
+
 ### [v0.23.2](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.23.2)
 
 - **CLI 日期参数按本地时区解析** — 仅日期和旧版精确到分钟的日期时间输入，会先按用户本地时区解析再用于 API 请求；同时支持 RFC 3339 日期时间输入

@@ -437,7 +437,7 @@ OAuth Token 应安全存储在应用程序中（如加密文件、安全密钥�
 | `LONGBRIDGE_QUOTE_WS_URL`          | 行情 WebSocket 地址（默认：`wss://openapi-quote.longbridge.com/v2`）                                                    |
 | `LONGBRIDGE_TRADE_WS_URL`          | 交易 WebSocket 地址（默认：`wss://openapi-trade.longbridge.com/v2`）                                                    |
 | `LONGBRIDGE_REGION`                | 覆盖接入点；SDK 会按网络自动选择，若判断不正确可设置（如 `cn`、`hk`）                                                   |
-| `LONGBRIDGE_ENABLE_OVERNIGHT`      | 是否开启夜盘行情，`true` 或 `false`（默认：`false`）；夜盘行情已包含在 Nasdaq Basic 中免费提供，仅支持美股 |
+| `LONGBRIDGE_ENABLE_OVERNIGHT`      | 是否开启夜盘行情，`true` 或 `false`（默认：`false`）；夜盘行情已包含在 US LV1 中免费提供，仅支持美股 |
 | `LONGBRIDGE_PUSH_CANDLESTICK_MODE` | K 线推送模式，`realtime` 或 `confirmed`（默认：`realtime`）                                                             |
 | `LONGBRIDGE_PRINT_QUOTE_PACKAGES`  | 连接时是否打印行情包，`true` 或 `false`（默认：`true`）                                                                 |
 | `LONGBRIDGE_LOG_PATH`              | 日志文件路径（默认：不写日志）                                                                                          |
@@ -530,6 +530,26 @@ new_token = config.refresh_access_token(expired_at=datetime.now() + timedelta(da
 print("新 Access Token：", new_token)
 # 用新 token 创建新 Config，或将其持久化为 LONGBRIDGE_ACCESS_TOKEN
 new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+```
+
+  </TabItem>
+  <TabItem value="python-async" label="Python (async)">
+
+```python
+import asyncio
+from datetime import datetime, timedelta
+from longbridge.openapi import Config
+
+async def main() -> None:
+    config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN")
+    # 指定 3 年后过期
+    new_token = await config.refresh_access_token_async(expired_at=datetime.now() + timedelta(days=365 * 3))
+    print("新 Access Token：", new_token)
+    # 用新 token 创建新 Config，或将其持久化为 LONGBRIDGE_ACCESS_TOKEN
+    new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
   </TabItem>
@@ -921,7 +941,7 @@ g++ -std=c++17 account_asset.cpp -o account_asset -llongbridge && ./account_asse
 
 订阅行情数据请检查 [开发者中心](https://open.longbridge.com/dashboard) - "行情权限"是否正确
 
-- 港股 - BMP 基础报价，无实时行情推送，无法用 WebSocket 订阅
+- [港股](https://longbridge.com/hk/) - BMP 基础报价，无实时行情推送，无法用 WebSocket 订阅
 - 美股 - 纳斯达克 Basic 行情（只限 OpenAPI）
 
 运行前访问 [开发者中心](https://open.longbridge.com/dashboard)，检查确保账户有正确的行情权限。

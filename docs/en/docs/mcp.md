@@ -9,7 +9,7 @@ next: false
 
 # Longbridge MCP Service
 
-Longbridge provides a hosted HTTP MCP (Model Context Protocol) service that lets you use Longbridge market data and account capabilities directly from AI coding assistants and chat tools — without managing API keys manually.
+Longbridge provides a hosted MCP (Model Context Protocol) service that lets you use [Longbridge market data](https://longbridge.com/markets) and account capabilities directly from ChatGPT, AI coding assistants, and other chat tools — without managing API keys manually.
 
 :::tip MCP endpoint
 
@@ -21,14 +21,14 @@ Longbridge provides a hosted HTTP MCP (Model Context Protocol) service that lets
 
 Longbridge MCP exposes 100+ tools across six capability areas. Your client discovers them automatically on connect — no manual configuration.
 
-| Capability                  | Coverage                                                                  |
-| --------------------------- | ------------------------------------------------------------------------- |
-| **Real-time market data**   | Quotes, candlesticks, depth, broker queues, trades, intraday capital flow |
-| **Fundamentals & research** | Company profiles, dividends, valuations, executive holdings, A/H premium  |
-| **Derivatives**             | Option chains, warrant filters, issuers, warrant quotes                   |
-| **Account & portfolio**     | Balances, positions, cash flow, watchlists and groups                     |
-| **Trading**                 | Place / modify / cancel orders, estimate max purchase quantity            |
-| **Automation**              | Price alerts, scheduled DCA (dollar-cost averaging) plans                 |
+| Capability                  | Coverage                                                                                           |
+| --------------------------- | -------------------------------------------------------------------------------------------------- |
+| **[Real-time market data](https://longbridge.com/markets)**   | Quotes, candlesticks, depth, broker queues, trades, intraday capital flow                          |
+| **Fundamentals & research** | Company profiles, [dividends](https://longbridge.com/calendar/dividend), valuations, executive holdings, A/H premium, macroeconomic indicators |
+| **Derivatives**             | Option chains, warrant filters, issuers, warrant quotes                                            |
+| **Account & portfolio**     | Balances, positions, cash flow, watchlists and groups                                              |
+| **Trading**                 | Place / modify / cancel orders, estimate max purchase quantity                                     |
+| **Automation**              | Price alerts, scheduled DCA (dollar-cost averaging) plans                                          |
 
 Actual tool availability depends on your region, account level, and granted OAuth scopes.
 
@@ -38,33 +38,32 @@ Actual tool availability depends on your region, account level, and granted OAut
 
 ## Prerequisites
 
-- An active Longbridge account with onboarding completed, or a paper trading account
-- An AI client that supports MCP OAuth 2.1 (see compatibility note below)
+- An active [Longbridge account](https://longbridge.com/hk/download) with onboarding completed, or a paper trading account
+- Another AI client that supports MCP OAuth 2.1 (see compatibility note below)
 
 ## Client setup
 
-> Configuration format may vary across client versions. Treat your client's official MCP documentation as the source of truth. The core parameter you need is the server URL below.
+ChatGPT is the recommended starting point because Longbridge is available directly in ChatGPT Plugins. For other MCP clients, configuration format may vary across client versions; treat your client's official MCP documentation as the source of truth.
 
 ### ChatGPT
 
-You need to enable [ChatGPT Developer Mode](https://developers.openai.com/api/docs/guides/developer-mode) before you can add Longbridge MCP.
+Longbridge is available as an official ChatGPT App.
 
-In ChatGPT, go to [Settings → Apps](https://chatgpt.com/#settings/Connectors) → [Advanced settings → Developer mode](https://chatgpt.com/#settings/Connectors/Advanced) and turn on **Developer mode**.
+On ChatGPT web, desktop, or mobile:
 
-![](https://assets.lbctrl.com/uploads/02e8a24a-be0b-49b2-a4eb-9952bc7a4f9b/enable-chatgpt-dev.png)
+1. Open **Plugins**
+2. Search for `longbridge`, or open the [Longbridge ChatGPT App](https://chatgpt.com/apps/longbridge/asdk_app_6a2baf2fad748191812393c3e00308ef) directly
+3. Select **Longbridge** and complete the authorization login
 
-Then click **Back** to return to the Apps list, where you can click the **Create app** button to add a new app — this is where you add Longbridge MCP.
+![Search for Longbridge in ChatGPT Plugins](https://assets.lbkrs.com/uploads/aeb84040-b2c7-442d-af46-adfab66297a1/scr-20260707-nbjr.png)
 
-Fill in the form:
+![Authorize the Longbridge ChatGPT App](https://assets.lbkrs.com/uploads/a66bcd75-d747-4259-b684-a689d324716c/scr-20260707-nbno.png)
 
-- Name：`Longbridge`
-- Description：`Investment market insights`
-- Connection (Server URL):`https://mcp.longbridge.com`
-- Authentication：OAuth
+After authorization, prefix every message with `@longbridge` to send it to Longbridge MCP — for example: `@longbridge check my today's orders`. Without this prefix, ChatGPT will not route your question to Longbridge.
 
-Full walkthrough video:
-
-<video src="https://assets.lbctrl.com/uploads/a9e06030-99e7-4f1b-90a6-d5efd5bb1fe8/longbridge-mcp-for-chatgpt.mp4" controls />
+:::warning Trading features unavailable in ChatGPT
+Due to ChatGPT platform policies, the Longbridge ChatGPT App does not include order placement and other trading tools. To use trading features, switch to Claude Code, Cursor, or another MCP client.
+:::
 
 ### Claude Code
 
@@ -97,6 +96,20 @@ Then follow the OAuth authorization flow in Codex when prompted.
 3. Click **Save**
 4. Back in the MCP Servers list, click **Authenticate** on the `longbridge` entry to complete OAuth authorization
 
+### Grok
+
+Open [Grok Connectors](https://grok.com/connectors) and add a custom MCP server:
+
+1. In the left sidebar, go to **Skills and Connectors** → **Connectors** → **New Connector** → **Custom**
+2. Fill in:
+   - Name: `Longbridge`
+   - Server URL: `https://mcp.longbridge.com`
+3. Click **Add Connector** and follow the Longbridge OAuth 2 authorization flow to complete the setup
+
+![](https://assets.lbkrs.com/uploads/08d07992-5463-4bfd-a4e4-97fab6e9cb41/grok-0.png)
+
+![](https://assets.lbkrs.com/uploads/56eee753-f3d4-4186-b024-ee0145f4eb54/grok-1.png)
+
 ### Cursor
 
 Settings → MCP Servers → Add Remote MCP Server, then enter the URL above.
@@ -119,9 +132,27 @@ Add the following to your `settings.json` under the `context_servers` key (key n
 
 Settings → MCP Servers → Add, then enter the URL above.
 
+### Manus
+
+In Manus, open the **Plugins** window, click the **Create** button on the right side, and select **Import MCP by JSON** from the menu. Paste the following JSON to complete the import:
+
+```json
+{
+  "mcpServers": {
+    "longbridge": {
+      "url": "https://mcp.longbridge.com"
+    }
+  }
+}
+```
+
+![](https://assets.lbctrl.com/uploads/f3aa3f71-c7a1-48b3-91dc-ea82a7018b53/scr-20260625-ttzy.png)
+
 ## OAuth authorization flow
 
 Longbridge MCP uses standard OAuth 2.1. You never need to paste API keys or tokens into the client.
+
+In ChatGPT, the authorization happens when you add Longbridge from Plugins. In other MCP clients, the first tool call usually starts the browser authorization flow.
 
 ```
 AI client                  Browser                   Longbridge
@@ -159,11 +190,11 @@ If your client has incomplete OAuth support or cannot launch a browser, use an [
 - **Least privilege**: Only approve the scopes required for your current task; avoid over-granting
 - **Trading confirmation**: For any order placement prompt, explicitly instruct the AI to ask for human confirmation before executing
 - **Credential handling**: OAuth credentials are managed by your client; avoid copying them into untrusted environments
-- **Regular review**: Periodically check and revoke unused authorizations in your Longbridge account security settings
+- **Regular review**: Periodically check and revoke unused authorizations in your [Longbridge account](https://longbridge.com/hk/download) security settings
 
 ## Recommended usage pattern
 
-1. **Start with read-only tools**: Begin with market data, account overview, and position queries to learn tool behavior at low risk
+1. **Start with read-only tools**: Begin with [market data](https://longbridge.com/markets), account overview, and position queries to learn tool behavior at low risk
 2. **Gradually enable trading**: Enable order placement only after verifying scope configuration and your own risk controls
 3. **Add guardrails in prompts**: For example, "keep each trade under X", "always confirm with me before placing an order"
 

@@ -6,6 +6,18 @@ sidebar_position: 7
 sidebar_icon: newspaper
 ---
 
+## 2026-06-25
+
+### SDK v4.3.3
+
+- **Macroeconomic indicators** — Two new `FundamentalContext` methods: `macroeconomic_indicators` lists all indicators (filter by country, keyword search), `macroeconomic` returns historical release data (actual / forecast / previous values) for a given indicator code
+
+
+### CLI v0.24.0
+
+- **New `macrodata` command** — Browse 400+ macro indicators across US/HK/CN/EU/JP/SG and query historical release data with actual, forecast, previous, and revised values; supports `--country`, `--keyword`, `--lang`, `--start`, `--end`, `--limit`, `--page`, `--format json`
+- MCP server updated in sync — `macrodata_indicators` and `macrodata` tools now available to AI agents via the Longbridge MCP server
+
 ## 2026-06-16
 
 ### CLI v0.23.2

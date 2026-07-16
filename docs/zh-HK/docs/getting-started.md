@@ -426,7 +426,7 @@ OAuth Token 應安全儲存在應用程式中（如加密檔案、安全金鑰�
 | `LONGBRIDGE_QUOTE_WS_URL`          | 行情 WebSocket 位址（預設：`wss://openapi-quote.longbridge.com/v2`）                                                    |
 | `LONGBRIDGE_TRADE_WS_URL`          | 交易 WebSocket 位址（預設：`wss://openapi-trade.longbridge.com/v2`）                                                    |
 | `LONGBRIDGE_REGION`                | 覆寫接入點；SDK 會依網路自動選擇，若判斷不正確可設定（如 `cn`、`hk`）                                                   |
-| `LONGBRIDGE_ENABLE_OVERNIGHT`      | 是否開啟夜盤行情，`true` 或 `false`（預設：`false`）；夜盤行情已包含在 Nasdaq Basic 中免費提供，僅支援美股 |
+| `LONGBRIDGE_ENABLE_OVERNIGHT`      | 是否開啟夜盤行情，`true` 或 `false`（預設：`false`）；夜盤行情已包含在 US LV1 中免費提供，僅支援美股 |
 | `LONGBRIDGE_PUSH_CANDLESTICK_MODE` | K 線推送模式，`realtime` 或 `confirmed`（預設：`realtime`）                                                             |
 | `LONGBRIDGE_PRINT_QUOTE_PACKAGES`  | 連線時是否列印行情包，`true` 或 `false`（預設：`true`）                                                                 |
 | `LONGBRIDGE_LOG_PATH`              | 日誌檔案路徑（預設：不寫日誌）                                                                                          |
@@ -520,6 +520,26 @@ new_token = config.refresh_access_token(expired_at=datetime.now() + timedelta(da
 print("新 Access Token：", new_token)
 # 用新 token 建立新 Config，或將其持久化為 LONGBRIDGE_ACCESS_TOKEN
 new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+```
+
+  </TabItem>
+  <TabItem value="python-async" label="Python (async)">
+
+```python
+import asyncio
+from datetime import datetime, timedelta
+from longbridge.openapi import Config
+
+async def main() -> None:
+    config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", "YOUR_ACCESS_TOKEN")
+    # 指定 3 年後過期
+    new_token = await config.refresh_access_token_async(expired_at=datetime.now() + timedelta(days=365 * 3))
+    print("新 Access Token：", new_token)
+    # 用新 token 建立新 Config，或將其持久化為 LONGBRIDGE_ACCESS_TOKEN
+    new_config = Config.from_apikey("YOUR_APP_KEY", "YOUR_APP_SECRET", new_token)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
   </TabItem>
@@ -909,7 +929,7 @@ g++ -std=c++17 account_asset.cpp -o account_asset -llongbridge && ./account_asse
 
 訂閱行情數據請檢查 [開發者中心](https://open.longbridge.com/dashboard) - "行情權限"是否正確
 
-- 港股 - BMP 基礎報價，無實時行情推送，無法用 WebSocket 訂閱
+- [港股](https://longbridge.com/hk/) - BMP 基礎報價，無實時行情推送，無法用 WebSocket 訂閱
 - 美股 - 納斯達克 Basic 行情（只限 OpenAPI）
 
 運行前訪問 [開發者中心](https://open.longbridge.com/dashboard)，檢查確保賬戶有正確的行情權限。

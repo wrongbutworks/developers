@@ -437,12 +437,12 @@ The design system embraces substantial whitespace to reduce cognitive load and e
 ### Quick Color Reference (Dark Mode)
 
 - **Page Background:** Dark Navy (`#0A0E19`)
-- **Surface / Elevated Background:** Dark Navy Deep (`#13182A`)
+- **Surface / Elevated Background:** Dark Navy Deep (`#161A26`)
 - **Higher Elevation:** Dark Elevated (`#202127`)
 - **Alt Background:** Dark Alt (`#161A26`)
 - **Primary Button Background:** White (`#FFFFFF`) with Black text (`#000000`)
 - **Secondary Button Background:** `rgba(80, 80, 80, 0.5)` with light text (`#D1D5DB`)
-- **Card Background:** Dark Navy Deep (`#13182A`)
+- **Card Background:** Dark Navy Deep (`#161A26`)
 - **Card Border:** Dark Border (`#3C3F44`)
 - **Body Text:** Warm Off-White (`#DFDFD6`)
 - **Secondary Text:** Muted Gray (`#98989F`)
@@ -458,7 +458,7 @@ The design system embraces substantial whitespace to reduce cognitive load and e
 
 2. **Primary buttons must have 999px border radius** (fully rounded), black background / white text in light mode, white background / black text in dark mode. Padding `12px 24px`, height `44px`.
 
-3. **Cards must have `1px solid #ECEDEE` border** (light) or `1px solid #3C3F44` (dark), `16px` border radius, `24–28px` padding. Background `#FFFFFF` light / `#13182A` dark. Apply L2 shadow only on hover.
+3. **Cards must have `1px solid #ECEDEE` border** (light) or `1px solid #3C3F44` (dark), `16px` border radius, `24–28px` padding. Background `#FFFFFF` light / `#161A26` dark. Apply L2 shadow only on hover.
 
 4. **Navigation bar is semi-transparent** with backdrop blur. Light: `rgba(255,255,255,0.8)` + `saturate(1.8) blur(20px)`. Dark: `rgba(10,14,25,0.8)` + same blur. Border-bottom: `1px solid` divider color.
 
@@ -491,7 +491,7 @@ Dark mode uses a layered surface system to communicate elevation without shadows
 | Layer              | Token               | Value       | Use Case                                 |
 | ------------------ | ------------------- | ----------- | ---------------------------------------- |
 | **Page Base**      | `--lb-d-bg-1`       | `#0A0E19`   | Page background, sidebar, nav backdrop   |
-| **Elevated**       | `--vp-c-bg-soft`    | `#13182A`   | Cards, dropdowns, code blocks            |
+| **Elevated**       | `--vp-c-bg-soft`    | `#161A26`   | Cards, dropdowns, code blocks            |
 | **Higher Elev.**   | `--vp-c-bg-elv`     | `#202127`   | Modals, popovers, floating panels        |
 | **Alt Surface**    | `--vp-c-bg-alt`     | `#161A26`   | Table rows, alternate section backgrounds |
 | **AI Section BG**  | `--lb-ai-brand-bg`  | `#09252A`   | AI/Skill feature section background      |
@@ -551,7 +551,7 @@ Primary button **inverts** in dark mode — white background with black text:
 ### Dark Mode Cards
 
 **Card / Default (Dark)**
-- **Background:** `#13182A`
+- **Background:** `#161A26`
 - **Border:** `1px solid #3C3F44`
 - **Border Radius:** `16px`
 - **Padding:** `24–28px`
@@ -690,7 +690,7 @@ A full teal scale for gradient and tinted backgrounds:
 | Token               | Light         | Dark        | Role                    |
 | ------------------- | ------------- | ----------- | ----------------------- |
 | `--vp-c-bg`         | `#FFFFFF`     | `#0A0E19`   | Page background         |
-| `--vp-c-bg-soft`    | `#F6F6F7`     | `#13182A`   | Soft/card surface       |
+| `--vp-c-bg-soft`    | `#F6F6F7`     | `#161A26`   | Soft/card surface       |
 | `--vp-c-bg-elv`     | `#FFFFFF`     | `#202127`   | Elevated surface        |
 | `--vp-c-bg-alt`     | `#F6F6F7`     | `#161A26`   | Alt background          |
 | `--vp-c-text-1`     | `#3C3C43`     | `#DFDFD6`   | Primary text            |
