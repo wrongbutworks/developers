@@ -1,6 +1,6 @@
 import { createApiClient, type ApiConfig } from './http-client'
 import endsWith from 'lodash/endsWith'
-import { resolveUsOpenapiHost } from './app-id'
+import { resolveUsApiHost } from './app-id'
 
 export interface DynamicAuthConfig {
   appKey: string
@@ -34,10 +34,10 @@ export function createDynamicRequest(
   options?: Partial<Pick<ApiConfig, 'baseUrl' | 'timeout'>>
 ) {
   // Prefer runtime cookie `app_id`:
-  //   - longbridge_us     → https://openapi.longbridge.com          (US prod)
-  //   - longbridge_us_uat → https://openapi.longbridge-staging.com  (US staging)
+  //   - longbridge_us     → https://mr.longbridge.com          (US prod)
+  //   - longbridge_us_uat → https://mr.longbridge-staging.com  (US staging)
   // Fallback to hostname suffix detection.
-  const usHost = resolveUsOpenapiHost()
+  const usHost = resolveUsApiHost()
   const API_BASE_URL =
     usHost ||
     (endsWith(location.hostname, '.xyz')

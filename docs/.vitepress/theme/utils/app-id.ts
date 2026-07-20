@@ -5,10 +5,15 @@
  *   - packages/services/utils.ts:14-17 (APPID_PROXY_OVERRIDE)
  */
 
-/** Openapi host per US tenant environment. */
-export const US_APPID_OPENAPI_HOST: Record<string, string> = {
-  longbridge_us: 'https://openapi.longbridge.com',
-  longbridge_us_uat: 'https://openapi.longbridge-staging.com',
+/**
+ * API host per US tenant environment.
+ * Values match openapi-website-private/packages/utils/src/constant.ts DomainsMap:
+ *   us-prod.api    = 'https://mr.longbridge.com'
+ *   us-staging.api = 'https://mr.longbridge-staging.com'
+ */
+export const US_APPID_API_HOST: Record<string, string> = {
+  longbridge_us: 'https://mr.longbridge.com',
+  longbridge_us_uat: 'https://mr.longbridge-staging.com',
 }
 
 /** Read a cookie value on the client. Returns undefined on SSR or missing. */
@@ -32,15 +37,15 @@ export function getAppIdFromCookie(): string | undefined {
 /** Whether the current user is on a US tenant (either prod or UAT). */
 export function isUsAppId(): boolean {
   const appId = getAppIdFromCookie()
-  return !!appId && appId in US_APPID_OPENAPI_HOST
+  return !!appId && appId in US_APPID_API_HOST
 }
 
 /**
- * Resolve the openapi host for the current US tenant.
+ * Resolve the API host for the current US tenant.
  * Returns the matching host for `longbridge_us` (prod) / `longbridge_us_uat` (staging),
  * or undefined when the cookie is not a US app_id.
  */
-export function resolveUsOpenapiHost(): string | undefined {
+export function resolveUsApiHost(): string | undefined {
   const appId = getAppIdFromCookie()
-  return appId ? US_APPID_OPENAPI_HOST[appId] : undefined
+  return appId ? US_APPID_API_HOST[appId] : undefined
 }
