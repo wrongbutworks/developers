@@ -210,7 +210,11 @@ export default defineConfig(
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/api/, ''),
           },
-          // `/lb-api` 由下方 `lb-api-dynamic-proxy` 插件处理，按 cookie 中的 app_id 切换 upstream
+          '/lb-api': {
+            target: process.env.VITE_PORTAL_API_BASE_URL || 'https://mr.longbridge.xyz',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/lb-api/, '/api'),
+          },
         },
       },
       optimizeDeps: {

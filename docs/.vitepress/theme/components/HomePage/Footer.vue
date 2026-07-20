@@ -77,6 +77,7 @@ const rightLinks = computed(() => [
   { href: '/docs/cli', label: 'CLI' },
   { href: '/docs/llm', label: 'LLM' },
   { href: '/docs/assets', label: t('footer.assets') },
+  { href: 'https://navi-lang.org', label: 'Navi' },
   { href: 'https://github.com/longbridge/developers/issues', label: 'Feedback' },
 ])
 </script>
