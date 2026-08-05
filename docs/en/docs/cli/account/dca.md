@@ -4,6 +4,10 @@ sidebar_label: 'dca'
 sidebar_position: 10
 ---
 
+:::warning Not for Longbridge US Accounts
+This command requires an AP data-center account (HK / SG). US data-center accounts are not supported. AP accounts can use this command with any supported symbol, including US stocks.
+:::
+
 # longbridge dca
 
 Recurring investment — automatically invest a fixed amount at regular intervals. Create and manage plans that execute stock purchases on a daily, weekly, fortnightly, or monthly schedule. Track trade history, monitor cumulative profit, and check upcoming trade dates.

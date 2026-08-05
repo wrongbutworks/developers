@@ -7,6 +7,27 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.26.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.26.0)
+
+- **新增 TUI 设置弹窗（`Ctrl+,`）** — 首个设置项为涨跌颜色（红涨 / 绿涨），即时生效并写入 `~/.longbridge/terminal.json`，重启后保留
+- **TUI 快捷键提示随页面变化，支持鼠标滚轮** — 顶栏只列出当前页面可用的快捷键；滚轮可在自选 / 订单 / 新闻 / 持仓列表中移动选中项
+- **TUI 视觉升级** — 面板与弹窗改为圆角边框，标题与表头加粗，持仓页新增堆叠式资产分布条；全部沿用终端自身配色
+- **接入点不再卡在中国大陆** — 区域判定改为读取 geotest 返回的国家，而非仅判断其是否可达，并每 6 小时重新检测，离开中国大陆后不会继续被路由到 `longbridge.cn`。`check` 每次运行都会重新检测，实测两个接入点并切换到明显更优的一侧；`.cn` 连接失败时会提示如何手动指定区域
+- **修复：`ipo calendar` 无数据** — 上游聚合接口开始对所有账户返回空摘要，该命令已改用仍然可用的数据源重建
+- **修复：美股期权行情报错更清晰** — `option quote` 现会说明需要「OPRA US Options」OpenAPI 行情权限并附上订阅页链接，不再只抛出 `301604`
+- **修复：`ipo detail` 局部降级** — 时间轴、申购资格与持股数据视为可选补充信息，辅助接口不可用时仍会输出核心资料（JSON 中为 `null`，`-v` 下给出告警）
+
+### [v0.25.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.25.0)
+
+- **支持美国数据中心** — `auth login`（设备码流程与 `--auth-code`）支持美国账户授权，所有请求会按 token 自动路由到对应数据中心；`auth status` 展示当前 DC 区域
+- **美股账户与基本面接口覆盖** — 美股 token 下 14 个命令（`positions`、`order`、`company`、`valuation`、`financial-report`、`financial-statement`、`consensus`、`dividend` 等）自动路由到美股专属接口，并新增 `profit-analysis realized`、`financial-report key-metrics` 子命令
+- **`quant run` 迁移至 v2 接口并支持 Navi** — 新增 `--language navi|pine` 参数（默认 Navi）；图表渲染同时兼容 v1 与 v2 两种数据结构
+
+- **美股账户路由** — `company`、`valuation`、`financial-report`、`consensus`、`dividend`、`order`、`positions` 在美股数据中心账户下自动路由至美股 API
+- **新增 `etf-docs` 命令** — 列出美股 ETF 监管文件（招股书、事实说明书、年报），`--limit` 控制返回数量
+- **新增 `financial-report key-metrics` 子命令** — 美股关键财务指标，支持 `--report annual|quarterly`
+- **新增 `profit-analysis realized` 子命令** — 美股账户已实现盈亏，支持 `--category stock|option|crypto` 筛选
+- **新增订单选项** — `--status pending|history|all` 和 `--action buy|sell` 筛选美股历史委托；`order detail --attached` 获取关联子委托
 ### [v0.24.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.24.0)
 
 - **新增 `macrodata` 命令** — 浏览 400+ 宏观数据指标，覆盖美/港/中/欧/日/新六大市场；列表模式支持 `--country` 筛选，历史模式支持 `--start`/`--end` 日期区间；`--format json` 满足 AI / 脚本需求

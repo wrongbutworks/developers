@@ -7,6 +7,27 @@ sidebar_icon: newspaper
 
 # Release Notes
 
+### [v0.26.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.26.0)
+
+- **New TUI settings modal (`Ctrl+,`)** — first setting is up/down colors (red-up vs green-up); applied instantly and remembered across restarts in `~/.longbridge/terminal.json`
+- **Context-aware shortcut hints and mouse scrolling in the TUI** — the top bar now lists only the keys available on the current screen, and the scroll wheel moves the selection in the watchlist / orders / news / portfolio lists
+- **Refreshed TUI visuals** — rounded borders on panels and modals, bold titles and table headers, and a stacked asset-distribution bar on the Portfolio screen; all drawn in the terminal's own palette
+- **Access point no longer gets stuck on China Mainland** — the region is now decided by the country geotest reports rather than by whether it merely responds, and is re-checked every 6 hours, so a client that has left China Mainland stops being routed to `longbridge.cn`. `check` re-detects on every run, measures both access points and switches to whichever is decisively better; a connection failure against `.cn` now explains how to override the region
+- **Fix: `ipo calendar` returned no data** — the upstream aggregation endpoint began returning an empty summary for every account; the command is rebuilt on the data sources that still work
+- **Fix: clearer error for US option quotes** — `option quote` now explains that the "OPRA US Options" OpenAPI market-data permission is required and links to pricing, instead of surfacing a bare `301604`
+- **Fix: `ipo detail` degrades gracefully** — timeline, eligibility and holdings are treated as optional enrichment, so the core profile still prints when an auxiliary endpoint is unavailable (`null` in JSON, warnings under `-v`)
+
+### [v0.25.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.25.0)
+
+- **US data-center support** — `auth login` (device flow and `--auth-code`) can now authorize US accounts, and every authenticated request routes to the data center matching the token; `auth status` shows the active DC region
+- **US account and fundamentals coverage** — US tokens automatically route 14 commands (`positions`, `order`, `company`, `valuation`, `financial-report`, `financial-statement`, `consensus`, `dividend`, etc.) to US-specific endpoints, plus new `profit-analysis realized` and `financial-report key-metrics` subcommands
+- **`quant run` moved to the v2 API with Navi support** — new `--language navi|pine` flag (Navi is the default); chart rendering handles both the v1 and v2 payload shapes
+
+- **US market routing** — `company`, `valuation`, `financial-report`, `consensus`, `dividend`, `order`, `positions` auto-route to US APIs for US data-center accounts
+- **New `etf-docs` command** — list ETF regulatory documents (prospectus, fact sheets, annual reports) for US ETFs; `--limit` controls how many to return
+- **New `financial-report key-metrics` subcommand** — key financial indicators for US stocks; supports `--report annual|quarterly`
+- **New `profit-analysis realized` subcommand** — realized P&L by asset category (`--category stock|option|crypto`); US accounts only
+- **New order flags** — `--status pending|history|all` and `--action buy|sell` filter US order history; `order detail --attached` fetches child orders
 ### [v0.24.0](https://github.com/longbridge/longbridge-terminal/releases/tag/v0.24.0)
 
 - **New `macrodata` command** — Browse 400+ macrodata indicators across US/HK/CN/EU/JP/SG; list mode with optional `--country` filter, history mode for a specific indicator code with `--start`/`--end` date range; `--format json` for AI/scripting workflows

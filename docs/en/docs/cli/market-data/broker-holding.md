@@ -4,6 +4,10 @@ sidebar_label: 'broker-holding'
 sidebar_position: 15
 ---
 
+:::warning Not for Longbridge US Accounts
+This command requires an AP data-center account (HK / SG). US data-center accounts are not supported. AP accounts can use this command with any supported symbol, including US stocks.
+:::
+
 # longbridge broker-holding
 
 View broker holding positions for HK-listed stocks — top buyers/sellers, full detail list, and daily history per broker.

@@ -4,6 +4,10 @@ sidebar_label: 'dca'
 sidebar_position: 10
 ---
 
+:::warning Longbridge US 账户不支持
+此命令需要 AP 数据中心账户（香港/新加坡）。美股数据中心账户不支持此命令。AP 账户可操作任意标的，包括美股。
+:::
+
 # longbridge dca
 
 定投——按固定金额定期自动买入。支持按日、周、双周、月频率创建定投计划，管理计划状态，查看交易历史，并监控累计收益。

@@ -4,6 +4,10 @@ sidebar_label: 'broker-holding'
 sidebar_position: 15
 ---
 
+:::warning Longbridge US 账户不支持
+此命令需要 AP 数据中心账户（香港/新加坡）。美股数据中心账户不支持此命令。AP 账户可操作任意标的，包括美股。
+:::
+
 # longbridge broker-holding
 
 查看港股经纪商持仓——买卖方排行、完整持仓明细，以及指定经纪商的每日持仓变化。

@@ -24,9 +24,9 @@ longbridge macrodata
 ```
 
 ```
-Total: 619
+Total: 441
 Code   Name              Category    Country   Frequency   Source
-62267  Non-Farm Payroll  Employment  US        Monthly     Bureau of Labor Statistics
+61744  Non-Farm Payroll  Employment  US        Monthly     Bureau of Labor Statistics
 ...
 ```
 
@@ -56,7 +56,7 @@ longbridge macrodata --country US --limit 50 --page 2
 ### Historical releases for a specific indicator
 
 ```bash
-longbridge macrodata 62267
+longbridge macrodata 61744
 ```
 
 ```
@@ -71,7 +71,7 @@ Period      Actual   Forecast  Previous  Revised   Unit
 ### Filter history by date range
 
 ```bash
-longbridge macrodata 62267 --start 2024-01-01 --end 2024-12-31
+longbridge macrodata 61744 --start 2024-01-01 --end 2024-12-31
 ```
 
 ### JSON output for AI / scripting
@@ -81,7 +81,7 @@ longbridge macrodata 62267 --start 2024-01-01 --end 2024-12-31
 longbridge macrodata --format json
 
 # History as JSON
-longbridge macrodata 62267 --format json
+longbridge macrodata 61744 --format json
 ```
 
 **List JSON structure:**
@@ -94,7 +94,7 @@ longbridge macrodata 62267 --format json
   "has_more": true,
   "list": [
     {
-      "indicator_code": "62267",
+      "indicator_code": "61744",
       "country": "US",
       "name": "Non-Farm Payroll",
       "periodicity": "Monthly",
@@ -113,7 +113,7 @@ longbridge macrodata 62267 --format json
   "limit": 20,
   "has_more": true,
   "info": {
-    "indicator_code": "62267",
+    "indicator_code": "61744",
     "country": "US",
     "name": "Non-Farm Payroll",
     "periodicity": "Monthly",
@@ -141,10 +141,10 @@ longbridge macrodata 62267 --format json
 | Option | Description | Default |
 | ------ | ----------- | ------- |
 | `--country` | Filter list: `HK` \| `CN` \| `US` \| `EU` \| `JP` \| `SG` | All |
-| `--keyword` | Filter list by indicator name (fuzzy, list mode only) | — |
+| `--keyword` | Server-side keyword search on indicator name (list mode only) | — |
 | `--start` | History start date `YYYY-MM-DD` | — |
 | `--end` | History end date `YYYY-MM-DD` | — |
-| `--lang` | Language for names/descriptions: `zh-CN` \| `zh-HK` \| `en` | — |
+| `--lang` | Language for names/descriptions: `zh-CN` \| `en` | — |
 | `--limit` | Max records per page (list: max 1000, history: max 100) | 20 |
 | `--page` | Page number, 1-based | 1 |
 | `--format` | `table` or `json` | `table` |

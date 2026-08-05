@@ -10,6 +10,10 @@ highlight_theme: ''
 headingLevel: 2
 ---
 
+:::warning Not for Longbridge US Accounts
+This method requires an AP data-center account (HK / SG). US data-center accounts will receive a region restriction error. AP accounts can call this method with any supported symbol, including US stocks.
+:::
+
 Get full broker holding detail list for an HK-listed security (all brokers and their positions).
 
 <CliCommand>
